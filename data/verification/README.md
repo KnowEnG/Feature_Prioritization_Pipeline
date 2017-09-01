@@ -1,11 +1,11 @@
 # Verification directory files are benchmark result files
-The Makefile in the test directory contains the targets, needed to build the **Gene Prioritization Pipeline** benchmarks.
-For estimating base memory requirements use the above heuristic _gene_prioritization_p_memory_estimator.xlsx_
+The Makefile in the test directory contains the targets, needed to build the **Feature Prioritization Pipeline** benchmarks.
+For estimating base memory requirements use the above heuristic _feature_prioritization_p_memory_estimator.xlsx_
 
 
-* Follow the instructions on the **Gene Prioritization Pipeline** landing page to set up the environment:
+* Follow the instructions on the **Feature Prioritization Pipeline** landing page to set up the environment:
 ```
-    cd Gene_Prioritization_Pipeline/test
+    cd Feature_Prioritization_Pipeline/test
     make env_setup
 ```
 ### 1. Run the single drug small data test
@@ -24,4 +24,4 @@ For estimating base memory requirements use the above heuristic _gene_prioritiza
 ```
 * Results will match **data/verification/TEST_1_multidrug_results_pearson/** (when unzipped)
 
-### The file **gene_prioritization_runtime_memory.xlsx** is a development tool for estimating memory in different environments
+### The file **feature_prioritization_runtime_memory.xlsx** is a development tool for estimating memory in different environments

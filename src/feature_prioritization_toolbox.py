@@ -45,19 +45,17 @@ def generate_correlation_output(pc_array, phenotype_name, feature_name_list, run
         run_parameters: dictionary of run parameters with key 'results_directory'
     """
     phenotype_name_list = np.repeat(phenotype_name, len(feature_name_list))
-    baseline_score = pc_array
-    pc_array = abs(pc_array)
-    viz_score = (pc_array - min(pc_array)) / (max(pc_array) - min(pc_array))
-    pc_array = np.round(pc_array, 8)
-    viz_score = np.round(viz_score, 8)
-    baseline_score = np.round(baseline_score, 8)
+    baseline_score      = pc_array
+    pc_array            = abs(pc_array)
+    viz_score           = (pc_array - min(pc_array)) / (max(pc_array) - min(pc_array))
+    pc_array            = np.round(pc_array,       8)
+    viz_score           = np.round(viz_score,      8)
+    baseline_score      = np.round(baseline_score, 8)
     
-    output_val = np.column_stack(
-        (phenotype_name_list, feature_name_list, pc_array, viz_score, baseline_score))
-
-    df_header = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
-    result_df = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
-    result_df.index = range(result_df.shape[0])
+    output_val          = np.column_stack((phenotype_name_list, feature_name_list, pc_array, viz_score, baseline_score))
+    df_header           = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
+    result_df           = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
+    result_df.index     = range(result_df.shape[0])
 
     write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parameters)
 
@@ -70,16 +68,15 @@ def run_bootstrap_correlation(run_parameters):
     """
     run_parameters["results_tmp_directory"] = kn.create_dir(run_parameters["results_directory"], 'tmp')
 
-    phenotype_df = kn.get_spreadsheet_df(run_parameters["phenotype_name_full_path"])
-    spreadsheet_df = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
-    phenotype_df = phenotype_df.T
-    n_bootstraps = run_parameters["number_of_bootstraps"]
+    phenotype_df        = kn.get_spreadsheet_df(run_parameters["phenotype_name_full_path"])
+    spreadsheet_df      = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
+    phenotype_df        = phenotype_df.T
+    n_bootstraps        = run_parameters["number_of_bootstraps"]
+    number_of_jobs      = len(phenotype_df.index)
+    jobs_id             = range(0, number_of_jobs)
+    zipped_arguments    = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, n_bootstraps, jobs_id)
 
-    number_of_jobs = len(phenotype_df.index)
-    jobs_id = range(0, number_of_jobs)
-    zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, n_bootstraps, jobs_id)
     dstutil.parallelize_processes_locally(run_bootstrap_correlation_worker, zipped_arguments, number_of_jobs)
-
     write_phenotype_data_all(run_parameters)
     kn.remove_dir(run_parameters["results_tmp_directory"])
 
@@ -97,26 +94,26 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
 
     np.random.seed(job_id)
 
-    phenotype_df = phenotype_df.iloc[[job_id], :]
+    phenotype_df      = phenotype_df.iloc[[job_id], :]
+
 #    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_feature_prioritazion(spreadsheet_df, phenotype_df)
 
-    pearson_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
-    borda_count = np.zeros(spreadsheet_df.shape[0])
-    gm_accumulator = np.ones(spreadsheet_df.shape[0])
+    pearson_array     = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
+    borda_count       = np.zeros(spreadsheet_df.shape[0])
+    gm_accumulator    = np.ones(spreadsheet_df.shape[0])
     for bootstrap_number in range(0, n_bootstraps):
-        sample_random, sample_permutation = sample_a_matrix_pearson(
-            spreadsheet_df.as_matrix(), 1.0, run_parameters["cols_sampling_fraction"])
-        phenotype_response = phenotype_df.values[0, None]
-        phenotype_response = phenotype_response[0, sample_permutation]
-        pc_array = get_correlation(sample_random, phenotype_response, run_parameters)
-        borda_count = sum_array_ranking_to_borda_count(borda_count, np.abs(pc_array))
-        gm_accumulator = (np.abs(pc_array) + EPSILON_0) * gm_accumulator
-    pcc_gm_array = gm_accumulator ** (1 / n_bootstraps)
-    borda_count = borda_count / n_bootstraps
+        sample_random, sample_permutation = sample_a_matrix_pearson(spreadsheet_df.as_matrix(), 1.0, run_parameters["cols_sampling_fraction"])
+        phenotype_response                = phenotype_df.values[0, None]
+        phenotype_response                = phenotype_response[0, sample_permutation]
+        pc_array                          = get_correlation(sample_random, phenotype_response, run_parameters)
+        borda_count                       = sum_array_ranking_to_borda_count(borda_count, np.abs(pc_array))
+        gm_accumulator                    = (np.abs(pc_array) + EPSILON_0) * gm_accumulator
 
-    phenotype_name = phenotype_df.index.values[0]
+    pcc_gm_array      = gm_accumulator ** (1 / n_bootstraps)
+    borda_count       = borda_count / n_bootstraps
+    phenotype_name    = phenotype_df.index.values[0]
     feature_name_list = spreadsheet_df.index
-    viz_score = (borda_count - min(borda_count)) / (max(borda_count) - min(borda_count))
+    viz_score         = (borda_count - min(borda_count)) / (max(borda_count) - min(borda_count))
 
     generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
                                           phenotype_name, feature_name_list, run_parameters)
@@ -133,16 +130,14 @@ def generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
         run_parameters: dictionary of run parameters with key 'results_directory'
     """
     phenotype_name_list = np.repeat(phenotype_name, len(feature_name_list))
-    viz_score = np.round(viz_score, 8)
-    borda_count = np.round(borda_count, 8)
-    pearson_array = np.round(pearson_array, 8)
+    viz_score           = np.round(viz_score, 8)
+    borda_count         = np.round(borda_count, 8)
+    pearson_array       = np.round(pearson_array, 8)
 
-    output_val = np.column_stack(
-        (phenotype_name_list, feature_name_list, borda_count, viz_score, pearson_array))
-
-    df_header = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
-    result_df = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
-    result_df.index = range(result_df.shape[0])
+    output_val          = np.column_stack((phenotype_name_list, feature_name_list, borda_count, viz_score, pearson_array))
+    df_header           = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
+    result_df           = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
+    result_df.index     = range(result_df.shape[0])
 
     write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parameters)
 
@@ -163,26 +158,28 @@ def get_correlation(spreadsheet_mat, phenotype_response, run_parameters):
     if 'correlation_measure' in run_parameters:
         if run_parameters['correlation_measure'] == 'pearson':
 
-            spreadsheet_mat = spreadsheet_mat - spreadsheet_mat.mean(axis=1).reshape((-1, 1))
-            phenotype_response = phenotype_response - phenotype_response.mean()
-            spreadsheet_mat_var = np.std(spreadsheet_mat, axis=1)
+            spreadsheet_mat        = spreadsheet_mat - spreadsheet_mat.mean(axis=1).reshape((-1, 1))
+            phenotype_response     = phenotype_response - phenotype_response.mean()
+            spreadsheet_mat_var    = np.std(spreadsheet_mat, axis=1)
             phenotype_response_var = np.std(phenotype_response)
-            numerator = spreadsheet_mat.dot(phenotype_response)
-            denominator = spreadsheet_mat_var * phenotype_response_var * spreadsheet_mat.shape[1]
+            numerator              = spreadsheet_mat.dot(phenotype_response)
+            denominator            = spreadsheet_mat_var * phenotype_response_var * spreadsheet_mat.shape[1]
+
             with np.errstate(divide='ignore', invalid='ignore'):
-                correlation_array = np.true_divide(numerator, denominator)
+                correlation_array                 = np.true_divide(numerator, denominator)
                 correlation_array[denominator==0] = 0
 
             return correlation_array
 
         if run_parameters['correlation_measure'] == 't_test':
         
-            a = spreadsheet_mat[:, phenotype_response!=0]
-            b = spreadsheet_mat[:, phenotype_response==0]
-            d = np.mean(a, axis=1) - np.mean(b, axis=1)
+            a     = spreadsheet_mat[:, phenotype_response!=0]
+            b     = spreadsheet_mat[:, phenotype_response==0]
+            d     = np.mean(a, axis=1) - np.mean(b, axis=1)
             denom = np.sqrt(np.var(a, axis=1, ddof=1)/a.shape[1] + np.var(b, axis=1, ddof=1)/b.shape[1])
+
             with np.errstate(divide='ignore', invalid='ignore'):
-                correlation_array = np.divide(d, denom)
+                correlation_array                  = np.divide(d, denom)
                 correlation_array[np.isnan(denom)] = 0
 
             return correlation_array
@@ -206,13 +203,14 @@ def sum_array_ranking_to_borda_count(borda_count, corr_array):
         return borda_count
 
     # enumerate the borda vote
-    borda_add = np.zeros(num_elem)
-    enum_value = 1
-    sort_order = np.argsort(corr_array)
+    borda_add     = np.zeros(num_elem)
+    enum_value    = 1
+    sort_order    = np.argsort(corr_array)
     current_value = corr_array[sort_order[0]]
+
     for k in range(0, num_elem):
         if corr_array[sort_order[k]] != current_value:
-            enum_value += 1
+            enum_value   += 1
             current_value = corr_array[sort_order[k]]
         borda_add[sort_order[k]] = enum_value
 
@@ -233,15 +231,15 @@ def sample_a_matrix_pearson(spreadsheet_mat, rows_fraction, cols_fraction):
         sample_random: A specified precentage sample of the spread sheet.
         sample_permutation: the array that correponds to columns sample.
     """
-    features_size = int(np.round(spreadsheet_mat.shape[0] * (1 - rows_fraction)))
+    features_size        = int(np.round(spreadsheet_mat.shape[0] * (1 - rows_fraction)))
     features_permutation = np.random.permutation(spreadsheet_mat.shape[0])
     features_permutation = features_permutation[0:features_size].T
 
-    patients_size = int(np.round(spreadsheet_mat.shape[1] * cols_fraction))
-    sample_permutation = np.random.permutation(spreadsheet_mat.shape[1])
-    sample_permutation = sample_permutation[0:patients_size]
+    patients_size        = int(np.round(spreadsheet_mat.shape[1] * cols_fraction))
+    sample_permutation   = np.random.permutation(spreadsheet_mat.shape[1])
+    sample_permutation   = sample_permutation[0:patients_size]
 
-    sample_random = spreadsheet_mat[:, sample_permutation]
+    sample_random                                   = spreadsheet_mat[:, sample_permutation]
     sample_random[features_permutation[:, None], :] = 0
 
     return sample_random, sample_permutation
@@ -257,9 +255,9 @@ def trim_to_top_beta(corr_arr, Beta):
     Returns:
         corr_arr: the correlation array as binary with ones int the top Beta percent
     """
-    Beta = max(min(corr_arr.size, Beta) - 1, 0)
-    abs_corr_arr = np.abs(corr_arr)
-    abs_corr_arr_cutoff_value = sorted(abs_corr_arr)[::-1][Beta]
+    Beta                                               = max(min(corr_arr.size, Beta) - 1, 0)
+    abs_corr_arr                                       = np.abs(corr_arr)
+    abs_corr_arr_cutoff_value                          = sorted(abs_corr_arr)[::-1][Beta]
     corr_arr[abs_corr_arr < abs_corr_arr_cutoff_value] = 0
     return corr_arr
 
@@ -292,13 +290,13 @@ def write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parame
     """
     result_df.to_csv(get_output_file_name(run_parameters, 'results_directory', phenotype_name, 'viz'), header=True, index=False, sep='\t')
 
-    download_result_df = pd.DataFrame(data=None, index=None, columns=[phenotype_name])
+    download_result_df                 = pd.DataFrame(data=None, index=None, columns=[phenotype_name])
     download_result_df[phenotype_name] = result_df['Feature_ID']
     download_result_df.to_csv(
         get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'download'), header=True, index=False, sep='\t')
 
-    top_features = download_result_df.values[: run_parameters['top_beta_of_sort']]
-    update_orig_result_df = pd.DataFrame(np.in1d(feature_name_list, top_features).astype(int), index=feature_name_list, columns=[phenotype_name])
+    top_features                       = download_result_df.values[: run_parameters['top_beta_of_sort']]
+    update_orig_result_df              = pd.DataFrame(np.in1d(feature_name_list, top_features).astype(int), index=feature_name_list, columns=[phenotype_name])
     update_orig_result_df.to_csv(
         get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'original'), header=True, index=True, sep='\t')
 
@@ -313,10 +311,11 @@ def write_phenotype_data_all(run_parameters):
         ranked_features_per_phenotype_{method}_{correlation_measure}_{timestamp}_download.tsv
         top_features_per_phenotype_{method}_{correlation_measure}_{timestamp}_download.tsv
     """  
-    tmp_dir = run_parameters["results_tmp_directory"]
-    dirList = sorted(os.listdir(tmp_dir))
+    tmp_dir       = run_parameters["results_tmp_directory"]
+    dirList       = sorted(os.listdir(tmp_dir))
     download_list = []
     original_list = []
+
     for fileName in dirList:
         if (fileName[-12:] == 'download.tsv'):
             download_list.append(fileName)
@@ -327,28 +326,30 @@ def write_phenotype_data_all(run_parameters):
         return
 
     StartFileName = os.path.join(tmp_dir, original_list[0])
-    src_df = pd.read_csv(StartFileName, sep='\t', header=0, index_col=0)
-    index_list = src_df.index.values
+    src_df        = pd.read_csv(StartFileName, sep='\t', header=0, index_col=0)
+    index_list    = src_df.index.values
 
     all_phenotypes_download_df = pd.DataFrame(data=None, index=None)
     all_phenotypes_original_df = pd.DataFrame(data=None, index=index_list)
 
 
     for fileName in download_list:
-        tFileName = os.path.join(tmp_dir, fileName)
-        src_df = pd.read_csv(tFileName, sep='\t', header=0, index_col=None)
-        phenotype_name = src_df.columns.values[0]
+        tFileName                                  = os.path.join(tmp_dir, fileName)
+        src_df                                     = pd.read_csv(tFileName, sep='\t', header=0, index_col=None)
+        phenotype_name                             = src_df.columns.values[0]
         all_phenotypes_download_df[phenotype_name] = src_df[phenotype_name]
 
     for fileName in original_list:
-        tFileName = os.path.join(tmp_dir, fileName)
-        src_df = pd.read_csv(tFileName, sep='\t', header=0, index_col=0)          
-        phenotype_name = src_df.columns.values[0]
+        tFileName                                  = os.path.join(tmp_dir, fileName)
+        src_df                                     = pd.read_csv(tFileName, sep='\t', header=0, index_col=0)          
+        phenotype_name                             = src_df.columns.values[0]
         all_phenotypes_original_df[phenotype_name] = src_df[phenotype_name]
 
     all_phenotypes_download_df.index = range(1, all_phenotypes_download_df.shape[0]+1)
+
     all_phenotypes_download_df.to_csv(
         get_output_file_name(run_parameters, 'results_directory', 'ranked_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
+
     all_phenotypes_original_df.to_csv(
         get_output_file_name(run_parameters, 'results_directory', 'top_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
 
@@ -369,4 +370,5 @@ def get_output_file_name(run_parameters, dir_name_key, prefix_string, suffix_str
                                     run_parameters['method'] + '_' + run_parameters["correlation_measure"])
 
     output_file_name = kn.create_timestamped_filename(output_file_name) + '_' + suffix_string + '.' + type_suffix
+
     return output_file_name

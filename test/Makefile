@@ -35,37 +35,42 @@ run_all_methods: run_all_small run_all_pearson run_all_t_test
 # ----------------------------------------------------------------
 # Large Benchmarks RUN Section                                   -
 # ----------------------------------------------------------------
-run_all_pearson: run_pearson run_bootstrap_pearson
+run_all_Benchmarks: run_pearson run_bootstrap_pearson run_t_test run_bootstrap_t_test 
 
+# -------
+# pearson
+# -------
 run_pearson:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_1_FP_pearson.yml
-
 run_bootstrap_pearson:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_2_FP_bootstrap_pearson.yml
 
-# ----------------------------------------------------------------
-run_all_t_test: run_t_test run_bootstrap_t_test 
-
+# -------
+# t_test
+# -------
 run_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_5_FP_t_test.yml
-
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_3_FP_t_test.yml
 run_bootstrap_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_6_FP_bootstrap_t_test.yml
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_4_FP_bootstrap_t_test.yml
 
 # ----------------------------------------------------------------
 # Small Benchmarks RUN Section                                   -
 # ----------------------------------------------------------------
 run_all_small: run_single_drug_pearson run_multidrug_pearson run_single_drug_t_test run_multidrug_t_test
 
+# -------
+# pearson
+# -------
 run_single_drug_pearson:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_1_FP_single_drug_pearson.yml
-
 run_multidrug_pearson:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_2_FP_many_drugs_pearson.yml
 
+# -------
+# t_test
+# -------
 run_single_drug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_3_FP_single_drug_t_test.yml
-
 run_multidrug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
 
@@ -80,7 +85,6 @@ verification_tests:
 # ----------------------------------------------------------------
 unit_test_setup:
 	$(MKDIR_P) $(UNIT_TEST_TEMP_DIR)
-
 unit_tests:
 	cd unit; make all_unit_tests
 
@@ -88,9 +92,7 @@ unit_tests:
 # - CLEAN UP SECTION                                             -
 # ----------------------------------------------------------------	
 final_clean: clean_dir_recursively 
-
 clean_dir_recursively:
 	$(RMR) $(RUN_DIR)	
-
 unit_test_cleanup:
 	$(RMR) $(UNIT_TEST_TEMP_DIR)

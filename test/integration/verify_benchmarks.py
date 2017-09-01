@@ -1,78 +1,110 @@
 """
-lanier4@illinois.edu
+sobh@illinois.edu
 
 """
+
 import os
 import filecmp
-import time
 
-GP_options_dict = {
-                'run_pearson'                 : 'BENCHMARK_1_GP_pearson',
-                'run_net_pearson'             : 'BENCHMARK_3_GP_net_pearson',
-                'run_bootstrap_pearson'       : 'BENCHMARK_2_GP_bootstrap_pearson',
-                'run_bootstrap_net_pearson'   : 'BENCHMARK_4_GP_bootstrap_net_pearson',
-                'run_t_test'                  : 'BENCHMARK_5_GP_t_test',
-                'run_net_t_test'              : 'BENCHMARK_7_GP_net_t_test',
-                'run_bootstrap_t_test'        : 'BENCHMARK_6_GP_bootstrap_t_test',
-                'run_bootstrap_net_t_test'    : 'BENCHMARK_8_GP_bootstrap_net_t_test'}
+verification_dir = '../data/verification'
+results_dir      = '../test/run_dir/results'
 
+def verify_benchmark(BENCHMARK_name,BENCHMARK_YML) :
 
-verify_root_dir = '../data/verification'
-results_dir = './run_dir/results'
+    run_command  = 'python3 ../src/feature_prioritization.py -run_directory ./run_dir -run_file ' + BENCHMARK_YML
+    os.system(run_command)
 
+    All_files_in_results_dir = os.listdir(results_dir)
 
-def verify_results_directory(v_dir, results_dir):
-    """ Compare the verification files in v_dir with the result files in results_dir """
-    number_of_equals = 0
-    v_files_list = os.listdir(v_dir)
-    result_files_list = os.listdir(results_dir)
-    for file_name in v_files_list:
-        file_prefix = file_name[0:-4]
-        for res_file_name in result_files_list:
-            if res_file_name[0:len(file_prefix)] == file_prefix:
-                res_file_full_name = os.path.join(results_dir, res_file_name)
-                veri_file_name = os.path.join(v_dir, file_name)
-                if filecmp.cmp(res_file_full_name, veri_file_name) == False:
-                    print('NOT EQUAL:\n', file_name, '\n', res_file_name, '\n')
-                else:
-                    number_of_equals += 1
-
-    return number_of_equals, len(v_files_list)
-
-
-def run_all_BENCHMARKs_and_TESTs():
-    """ run the make file targes for all yaml files and compre the results with their verification files """
-    t0 = time.time()
-    directory_methods_dict = {v: k for k, v in (GP_options_dict).items()}
-    verification_directory_list = sorted(directory_methods_dict.keys(), reverse=True)
-
-    for test_directory in verification_directory_list:
-        verification_directory = os.path.join(verify_root_dir, test_directory)
-        verification_method = 'make' + ' ' + directory_methods_dict[test_directory]
-        print('\n\n\nRun Method:\t\t\t', verification_method, '\n', verification_directory)
-        os.system(verification_method)
-
-        n_eq, n_tot = verify_results_directory(verification_directory, results_dir)
-        tt = '%0.2f'%(time.time() - t0)
-        if n_eq == n_tot:
-            print('\n\t\t', tt, 'sec\t', test_directory, n_eq, 'of', n_tot, 'equal\t', 'PASS')
-        else:
-            print('\n\t\t', tt, 'sec\t', n_eq, 'of', n_tot, 'equal\t', test_directory, '<-- FAIL')
-        print('clear results and run_files')
-        for tmp_file_name in os.listdir(results_dir):
-            if os.path.isfile(os.path.join(results_dir, tmp_file_name)):
-                os.remove(os.path.join(results_dir, tmp_file_name))
-
+    for f in All_files_in_results_dir:
+        if BENCHMARK_name in f :
+            RESULT    = os.path.join(results_dir,      f             )
+            BENCHMARK = os.path.join(verification_dir, BENCHMARK_name+'.tsv')
+            if filecmp.cmp(RESULT, BENCHMARK) == True:
+                print(BENCHMARK, 'PASS' )
+            else:
+                print(BENCHMARK, 'FAIL' )
 
 def main():
-    try:
-        os.system('make env_setup')
-    except:
-        pass
+    BENCHMARK = {'pearson'    : [ 
+                                 'BENCHMARK_1_FP_pearson.yml'
+                               , '17-AAG_correlation_pearson'
+                               , 'ranked_features_per_phenotype_correlation_pearson'
+                               , 'top_features_per_phenotype_correlation_pearson'
+                               ] 
+               ,'bootstrap_pearson'     : [  
+                                 'BENCHMARK_2_FP_bootstrap_pearson.yml'
+                               , '17-AAG_bootstrap_correlation_pearson'
+                               , 'AEW541_bootstrap_correlation_pearson'
+                               , 'AZD0530_bootstrap_correlation_pearson'
+                               , 'AZD6244_bootstrap_correlation_pearson'
+                               , 'Erlotinib_bootstrap_correlation_pearson'
+                               , 'Irinotecan_bootstrap_correlation_pearson'
+                               , 'L-685458_bootstrap_correlation_pearson'
+                               , 'LBW242_bootstrap_correlation_pearson'
+                               , 'Lapatinib_bootstrap_correlation_pearson'
+                               , 'Nilotinib_bootstrap_correlation_pearson'
+                               , 'Nutlin-3_bootstrap_correlation_pearson'
+                               , 'PD-0325901_bootstrap_correlation_pearson'
+                               , 'PD-0332991_bootstrap_correlation_pearson'
+                               , 'PF2341066_bootstrap_correlation_pearson'
+                               , 'PHA-665752_bootstrap_correlation_pearson'
+                               , 'PLX4720_bootstrap_correlation_pearson'
+                               , 'Paclitaxel_bootstrap_correlation_pearson'
+                               , 'Panobinostat_bootstrap_correlation_pearson'
+                               , 'RAF265_bootstrap_correlation_pearson'
+                               , 'Sorafenib_bootstrap_correlation_pearson'
+                               , 'TAE684_bootstrap_correlation_pearson'
+                               , 'TKI258_bootstrap_correlation_pearson'
+                               , 'Topotecan_bootstrap_correlation_pearson'
+                               , 'ZD-6474_bootstrap_correlation_pearson'
+                               , 'ranked_features_per_phenotype_bootstrap_correlation_pearson'
+                               , 'top_features_per_phenotype_bootstrap_correlation_pearson'
+                               ]
+               ,'t_test': [  
+                                 'BENCHMARK_3_FP_t_test.yml'
+                               , '17-AAG_correlation_t_test'
+                               , 'ranked_features_per_phenotype_correlation_t_test'
+                               , 'top_features_per_phenotype_correlation_t_test'
+                               ]
+               ,'bootstra_t_test': [  
+                                 'BENCHMARK_4_FP_bootstrap_t_test.yml'
+                               , '17-AAG_bootstrap_correlation_t_test'
+                               , 'AEW541_bootstrap_correlation_t_test'
+                               , 'AZD0530_bootstrap_correlation_t_test'
+                               , 'AZD6244_bootstrap_correlation_t_test'
+                               , 'Erlotinib_bootstrap_correlation_t_test'
+                               , 'Irinotecan_bootstrap_correlation_t_test'
+                               , 'L-685458_bootstrap_correlation_t_test'
+                               , 'LBW242_bootstrap_correlation_t_test'
+                               , 'Lapatinib_bootstrap_correlation_t_test'
+                               , 'Nilotinib_bootstrap_correlation_t_test'
+                               , 'Nutlin-3_bootstrap_correlation_t_test'
+                               , 'PD-0325901_bootstrap_correlation_t_test'
+                               , 'PD-0332991_bootstrap_correlation_t_test'
+                               , 'PF2341066_bootstrap_correlation_t_test'
+                               , 'PHA-665752_bootstrap_correlation_t_test'
+                               , 'PLX4720_bootstrap_correlation_t_test'
+                               , 'Paclitaxel_bootstrap_correlation_t_test'
+                               , 'Panobinostat_bootstrap_correlation_t_test'
+                               , 'RAF265_bootstrap_correlation_t_test'
+                               , 'Sorafenib_bootstrap_correlation_t_test'
+                               , 'TAE684_bootstrap_correlation_t_test'
+                               , 'TKI258_bootstrap_correlation_t_test'
+                               , 'Topotecan_bootstrap_correlation_t_test'
+                               , 'ZD-6474_bootstrap_correlation_t_test'
+                               , 'ranked_features_per_phenotype_bootstrap_correlation_t_test'
+                               , 'top_features_per_phenotype_bootstrap_correlation_t_test'
+                               ]
+                }
 
-    run_all_BENCHMARKs_and_TESTs()
-    print('\n')
-
+    os.system('make env_setup')
+    for key in BENCHMARK.keys(): 
+        BENCHMARK_list = BENCHMARK[key]
+        BENCHMARK_YML  = BENCHMARK_list[0]
+        for BENCHMARK_name in BENCHMARK_list[1:] :
+            verify_benchmark(BENCHMARK_name,BENCHMARK_YML)
+            os.system('rm ./run_dir/results/*')
 
 if __name__ == "__main__":
     main()

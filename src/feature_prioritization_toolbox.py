@@ -26,40 +26,16 @@ def run_correlation(run_parameters):
     spreadsheet_df = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
     phenotype_df = phenotype_df.T
     
-    number_of_jobs = len(phenotype_df.index)
-    jobs_id = range(0, number_of_jobs)
-    zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, jobs_id)
-    dstutil.parallelize_processes_locally(run_correlation_worker, zipped_arguments, number_of_jobs)
-
-    write_phenotype_data_all(run_parameters)
-    kn.remove_dir(run_parameters["results_tmp_directory"])
-
-
-def run_correlation_worker(run_parameters, spreadsheet_df, phenotype_df, job_id):
-    """ core function for parallel run_correlation
-
-    Args:
-        run_parameters:  dict of parameters
-        spreadsheet_df:  spreadsheet data frame
-        phenotype_df:    phenotype data frame
-        job_id:          parallel iteration number
-    """
-    # selects the ith row in phenotype_df
-
-    np.random.seed(job_id)
-
-    phenotype_df = phenotype_df.iloc[[job_id], :]
-
-    spreadsheet_df, phenotype_df, msg = datacln.datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
-
     pc_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
 
     feature_name_list = spreadsheet_df.index
     phenotype_name = phenotype_df.index.values[0]
-    featurerate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters)
+    generate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters)
+    write_phenotype_data_all(run_parameters)
+    kn.remove_dir(run_parameters["results_tmp_directory"])
 
 
-def featurerate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters):
+def generate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters):
     """ Save final output of correlation
     
     Args:
@@ -122,7 +98,7 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
     np.random.seed(job_id)
 
     phenotype_df = phenotype_df.iloc[[job_id], :]
-    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_feature_prioritazion(spreadsheet_df, phenotype_df)
+#    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_feature_prioritazion(spreadsheet_df, phenotype_df)
 
     pearson_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
     borda_count = np.zeros(spreadsheet_df.shape[0])
@@ -142,7 +118,7 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
     feature_name_list = spreadsheet_df.index
     viz_score = (borda_count - min(borda_count)) / (max(borda_count) - min(borda_count))
 
-    featurerate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
+    generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
                                           phenotype_name, feature_name_list, run_parameters)
 
 

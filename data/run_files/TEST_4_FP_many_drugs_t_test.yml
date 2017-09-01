@@ -1,0 +1,35 @@
+# --------------------------------------------------------------------
+# - Analysis Method: correlation or  bootstrap_correlation           -
+# --------------------------------------------------------------------
+method:                      bootstrap_correlation
+
+# --------------------------------------------------------------------
+# - Correlation Method: pearson or t_test                            -
+# --------------------------------------------------------------------
+correlation_measure:         t_test
+
+# --------------------------------------------------------------------
+# - spreadsheet          dataframe in .tsv format                    -
+# - phenotype            dataframe in .tsv format                    -
+# --------------------------------------------------------------------
+spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_gene_sample.tsv
+phenotype_name_full_path:    ../data/spreadsheets/TEST_multi_drug_response_t_test.txt
+
+# --------------------------------------------------------------------
+# - directory where the result and temporary files will be written   -
+# --------------------------------------------------------------------
+results_directory:          ./run_dir/results
+
+# --------------------------------------------------------------------
+# - Number of random samplings                                       -
+# - Fraction of rows selected at random                              -
+# - Fraction of columns selected at random                           -
+# --------------------------------------------------------------------
+number_of_bootstraps:       100
+cols_sampling_fraction:     0.8 # 0.8 means 80% of columns
+
+# --------------------------------------------------------------------
+# - Number of features to retain                                     -
+# --------------------------------------------------------------------
+top_beta_of_sort:           2
+

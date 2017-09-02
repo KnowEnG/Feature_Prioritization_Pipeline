@@ -1,18 +1,18 @@
 # --------------------------------------------------------------------
 # - Analysis Method: correlation or  bootstrap_correlation           -
 # --------------------------------------------------------------------
-method:                      bootstrap_correlation
+method:                     bootstrap_correlation
 
 # --------------------------------------------------------------------
 # - Correlation Method: pearson or t_test                            -
 # --------------------------------------------------------------------
-correlation_measure:         pearson
+correlation_measure:        pearson
 
 # --------------------------------------------------------------------
-# - spreadsheet              dataframe in .tsv format                -
-# - phenotype                dataframe in .tsv format                -
+# - spreadsheet             dataframe in .tsv format                 -
+# - phenotype               dataframe in .tsv format                 -
 # --------------------------------------------------------------------
-spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_gene_sample.tsv
+spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_feature_sample.tsv
 phenotype_name_full_path:   ../data/spreadsheets/TEST_multi_drug_response_pearson.txt
 
 # --------------------------------------------------------------------

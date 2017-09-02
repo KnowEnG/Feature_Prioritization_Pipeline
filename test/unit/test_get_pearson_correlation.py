@@ -2,10 +2,10 @@ import unittest
 from unittest import TestCase
 import numpy as np
 
-import gene_prioritization_toolbox as gpt
+import feature_prioritization_toolbox as gpt
 
 class TestGet_pearson_correlation(TestCase):
-    """  predicted correlation vs gene_prioritization_toolbox.get_correlation for 'correlation_measure' = 'pearson'  """
+    """  predicted correlation vs feature_prioritization_toolbox.get_correlation for 'correlation_measure' = 'pearson'  """
     def test_get_pearson_correlation(self):
         """ (Note that this is a test of expected typical input and does not test extreme inputs or all possible inputs)
         1) data with same slope will have positive correlation and equal 1.0

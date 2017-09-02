@@ -96,7 +96,7 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
 
     phenotype_df      = phenotype_df.iloc[[job_id], :]
 
-#    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_feature_prioritazion(spreadsheet_df, phenotype_df)
+    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
 
     pearson_array     = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
     borda_count       = np.zeros(spreadsheet_df.shape[0])

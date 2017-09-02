@@ -6,7 +6,7 @@ ENV SRC_LOC /home
 RUN pip3 install -I knpackage redis
 
 # Clone from github
-RUN git clone https://github.com/KnowEnG/Gene_Prioritization_Pipeline.git ${SRC_LOC} 
+RUN git clone https://github.com/KnowEnG/Feature_Prioritization_Pipeline.git ${SRC_LOC} 
 
 # Set up working directory
 WORKDIR ${SRC_LOC}

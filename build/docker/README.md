@@ -1,8 +1,8 @@
-# Building The Gene Prioritization Pipeline Docker Image
-The Dockefile in this directory contains all the commands, in order, needed to build the **Gene Prioritization Pipeline** docker image.
+# Building The Feature Prioritization Pipeline Docker Image
+The Dockefile in this directory contains all the commands, in order, needed to build the **Feature Prioritization Pipeline** docker image.
 
 
-* Run the "make" command to build the **Gene Prioritization Pipeline** docker image (output: docker image called "gene_prioritization_pipeline" and a tag with today's date and time):
+* Run the "make" command to build the **Feature Prioritization Pipeline** docker image (output: docker image called "feature_prioritization_pipeline" and a tag with today's date and time):
 ```
     make build_docker_image
 ```
@@ -23,7 +23,7 @@ The Dockefile in this directory contains all the commands, in order, needed to b
 
 ### 1. Run the following command with the specified docker image:
 ```
-docker run -v `pwd`:/home/test/run_dir/ -it knowengdev/gene_prioritization_pipeline:04_26_2017 
+docker run -v `pwd`:/home/test/run_dir/ -it knowengdev/feature_prioritization_pipeline:04_26_2017 
 ```
 
 ### 2. Change directory to the "test" directory
@@ -36,7 +36,7 @@ cd test
 make env_setup
 ```
 
-### 4. Run the Gene Prioritization Pipeline
+### 4. Run the Feature Prioritization Pipeline
 ```
 make run_pearson
 ```

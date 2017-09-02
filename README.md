@@ -114,19 +114,16 @@ set the spreadsheet and phenotype data file names to point to your data
 ## Description of "run_parameters" file
 * * * 
 
-| **Key**                   | **Value** | **Comments** |
-| ------------------------- | --------- | ------------ |
-| method                    | correlation or  bootstrap_correlation | Choose feature prioritization method |
-| correlation_measure       | pearson or t_test | Choose correlation measure method |
-| spreadsheet_name_full_path | directory+spreadsheet_name|  Path and file name of user supplied feature sets |
-| phenotype_name_full_path | directory+phenotype_response| Path and file name of user supplied phenotype response file |
-| results_directory | directory | Directory to save the output files |
-| number_of_bootstraps | 5 | Number of random samplings |
-| cols_sampling_fraction | 0.9 | Select 90% of spreadsheet columns |
-| rwr_max_iterations | 100| Maximum number of iterations without convergence in random walk with restart |
-| rwr_convergence_tolerence | 1.0e-2 | Frobenius norm tolerence of spreadsheet vector in random walk|
-| rwr_restart_probability | 0.5 | alpha in `V_(n+1) = alpha * N * Vn + (1-alpha) * Vo` |
-| top_beta_of_sort| 100| Number of top features selected |
+| **Key**                    | **Value**                             | **Comments**                                                |
+| -------------------------- | ------------------------------------- | ----------------------------------------------------------- |
+| method                     | correlation or  bootstrap_correlation | Choose feature prioritization method                        |
+| correlation_measure        | pearson or t_test                     | Choose correlation measure method                           |
+| spreadsheet_name_full_path | directory+spreadsheet_name            |  Path and file name of user supplied feature sets           |
+| phenotype_name_full_path   | directory+phenotype_response          | Path and file name of user supplied phenotype response file |
+| results_directory          | directory                             | Directory to save the output files                          |
+| number_of_bootstraps       | 5                                     | Number of random samplings                                  |
+| cols_sampling_fraction     | 0.9                                   | Select 90% of spreadsheet columns                           |
+| top_beta_of_sort           | 100                                   | Number of top features selected                             |
 
 spreadsheet_name = CCLE_Expression_ensembl.df</br>
 phenotype_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt
@@ -137,27 +134,27 @@ phenotype_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt
 
 * Any method saves separate files per phenotype with name {phenotype}\_{method}\_{correlation_measure}\_{timestamp}\_viz.tsv. Features are sorted in descending order based on `visualization_score`. </br>  
 
- | **Response** | **Feature_ENSEMBL_ID** | **quantitative_sorting_score** | **visualization_score** | **baseline_score** |
- |:-------------:|:------------:|:---------:|:--------------:|:--------------:|
- |   phenotype 1      |   feature 1     |    float    |    float         |   float          | 
- |    ...      |   ...     |    ...    |    ...         |   ...          | 
- |   phenotype 1      |   feature n     |    float    |    float         |   float          | 
+ | **Response**  | **Feature_ID** | **quantitative_sorting_score** | **visualization_score** | **baseline_score** |
+ |:-------------:|:--------------:|:------------------------------:|:-----------------------:|:------------------:|
+ |   phenotype 1 |   feature 1    |    float                       |    float                |   float            | 
+ |    ...        |   ...          |    ...                         |    ...                  |   ...              | 
+ |   phenotype 1 |   feature n    |    float                       |    float                |   float            | 
 
 
 * Any method saves sorted features for each phenotype with name ranked_features_per_phenotype\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
 
- |**Ranking**| **phenotype 1** |**phenotype 2**|**...**|**phenotype n**|
- |:----:| :--------------------: |:--------------------:|---|:--------------------:|
- |1| feature </br> (most significant) |feature </br> (most significant)|...|feature </br> (most significant)|
- |...|...| ... |...|...|...|
- |n|feature </br> (least significant) |feature </br> (least significant)|...|feature </br> (least significant)|
+ |**Ranking**| **phenotype 1**                  |**phenotype 2**                  |**...**|**phenotype n**                  |
+ |:---------:| :------------------------------: |:------------------------------: | :---: |:-------------------------------:|
+ |1          | feature </br> (most significant) |feature </br> (most significant) |...    |feature </br> (most significant) |
+ |...        |...                               | ...                             |...    |...                              |
+ |n          |feature </br> (least significant) |feature </br> (least significant)|...    |feature </br> (least significant)|
  
  
  
 * Any method saves spreadsheet with top ranked features per phenotype with name  top_features_per_phenotype\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
 
- |**Features**| **phenotype 1**|**...**|**phenotype n**|
- | :--------------------: |:--------------------:|---|:--------------------:|
- | feature 1 |1/0 |...|1/0|
- | ... |...|...|...|
- | feature n | 1/0|...|1/0|
+ |**Features**            | **phenotype 1**      |**...**|**phenotype n**       |
+ | :--------------------: |:--------------------:| :---: |:--------------------:|
+ | feature 1              |1/0                   |...    |1/0                   |
+ | ...                    |...                   |...    |...                   |
+ | feature n              | 1/0                  |...    |1/0                   |

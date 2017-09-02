@@ -3,9 +3,9 @@
 Use verification testing to assure that the runtime environment and the current version produce the expected output using this repository's data.
 * * * 
 
-### 1. Clone the Gene_Prioritization_Pipeline Repo
+### 1. Clone the Feature_Prioritization_Pipeline Repo
 ```
- git clone https://github.com/KnowEnG/Gene_Prioritization_Pipeline.git
+ git clone https://github.com/KnowEnG/Feature_Prioritization_Pipeline.git
 ```
 
 ### 2. Install the following (Ubuntu or Linux)
@@ -22,10 +22,10 @@ Use verification testing to assure that the runtime environment and the current 
  pip3 install knpackage
 ```
 
-### 3. Change directory to Gene_Prioritization_Pipeline/test
+### 3. Change directory to Feature_Prioritization_Pipeline/test
 
 ```
-cd Gene_Prioritization_Pipeline/test
+cd Feature_Prioritization_Pipeline/test
 ```
 
 ### 4. Start the verification test from the command line
@@ -34,7 +34,7 @@ cd Gene_Prioritization_Pipeline/test
 make verification_tests
 ```
 
-### 5. The output files will be compared with the Gene_Prioritization_Pipeline/data/verification/BENCHMARK_XX... data
+### 5. The output files will be compared with the Feature_Prioritization_Pipeline/data/verification/BENCHMARK_XX... data
 * Each Benchmark will report PASS or FAIL and list the names of files producing differences (if any).
 * Note that the files generated will be erased after each Benchmark test.
 

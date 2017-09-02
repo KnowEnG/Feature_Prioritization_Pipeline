@@ -9,10 +9,10 @@ method:                     correlation
 correlation_measure:        t_test
 
 # --------------------------------------------------------------------
-# - spreadsheet          dataframe in .tsv format                    -
-# - phenotype            dataframe in .tsv format                    -
+# - spreadsheet             dataframe in .tsv format                 -
+# - phenotype               dataframe in .tsv format                 -
 # --------------------------------------------------------------------
-spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_gene_sample.tsv
+spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_feature_sample.tsv
 phenotype_name_full_path:   ../data/spreadsheets/TEST_1_response_t_test.tsv
 
 # --------------------------------------------------------------------

@@ -30,11 +30,6 @@ def run_correlation(run_parameters):
     jobs_id = range(0, number_of_jobs)
     zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, jobs_id)
     dstutil.parallelize_processes_locally(run_correlation_worker, zipped_arguments, number_of_jobs)
-    # pc_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
-
-    # feature_name_list = spreadsheet_df.index
-    # phenotype_name = phenotype_df.index.values[0]
-    # generate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters)
     write_phenotype_data_all(run_parameters)
     kn.remove_dir(run_parameters["results_tmp_directory"])
 

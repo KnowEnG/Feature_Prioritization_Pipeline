@@ -3,7 +3,7 @@ This is the Knowledge Engine for Genomics (KnowEnG), an NIH, BD2K Center of Exce
 
 This pipeline **ranks** the rows of a given spreadsheet, where spreadsheet's rows correspond to feature-labels and columns correspond to sample-labels. The ranking is based on correlating feature expression data against pheno-type data.
 
-There are four prioritization methods, using either pearson or t-test as the measure of correlation:
+There are two prioritization methods, using either pearson or t-test as the measure of correlation:
 
 
 | **Options**                                        | **Method**                           | **Parameters**            |
@@ -91,7 +91,7 @@ __***Follow steps 1-3 above then do the following:***__
  
 ### * Create run_paramters file  (YAML Format)
  ``` 
-Look for examples of run_parameters in ./Feature_Prioritization_Pipeline/data/run_files/zTEMPLATE_GP_BENCHMARKS.yml
+Look for examples of run_parameters in ./Feature_Prioritization_Pipeline/data/run_files/zTEMPLATE_FP_BENCHMARKS.yml
  ```
 ### * Modify run_paramters file  (YAML Format)
 ```
@@ -107,7 +107,7 @@ set the spreadsheet and phenotype data file names to point to your data
    
   * Run
    ```
-  python3 ../src/feature_prioritization.py -run_directory ./ -run_file zTEMPLATE_GP_BENCHMARKS.yml
+  python3 ../src/feature_prioritization.py -run_directory ./ -run_file zTEMPLATE_FP_BENCHMARKS.yml
    ```
 
 * * * 

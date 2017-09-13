@@ -9,7 +9,7 @@ import filecmp
 verification_dir = '../data/verification'
 results_dir      = '../test/run_dir/results'
 
-def verify_benchmark(BENCHMARK_name,BENCHMARK_YML) :
+def verify_benchmark(BENCHMARK_name_list, BENCHMARK_YML) :
 
     run_command  = 'python3 ../src/feature_prioritization.py -run_directory ./run_dir -run_file ' + BENCHMARK_YML
     os.system(run_command)
@@ -17,18 +17,42 @@ def verify_benchmark(BENCHMARK_name,BENCHMARK_YML) :
     All_files_in_results_dir = os.listdir(results_dir)
 
     for f in All_files_in_results_dir:
-        if BENCHMARK_name in f :
-            RESULT    = os.path.join(results_dir,      f             )
-            BENCHMARK = os.path.join(verification_dir, BENCHMARK_name+'.tsv')
-            if filecmp.cmp(RESULT, BENCHMARK) == True:
-                print(BENCHMARK, 'PASS' )
-            else:
-                print(BENCHMARK, 'FAIL' )
+        for BENCHMARK_name in BENCHMARK_name_list:
+          if BENCHMARK_name in f :
+              RESULT    = os.path.join(results_dir,      f             )
+              BENCHMARK = os.path.join(verification_dir, BENCHMARK_YML[:-4], BENCHMARK_name+'.tsv')
+              if filecmp.cmp(RESULT, BENCHMARK) == True:
+                  print(BENCHMARK, 'PASS' )
+              else:
+                  print(BENCHMARK, 'FAIL' )
 
 def main():
     BENCHMARK = {'pearson'    : [ 
                                  'BENCHMARK_1_FP_pearson.yml'
                                , '17-AAG_correlation_pearson'
+                               , 'AEW541_correlation_pearson'
+                               , 'AZD0530_correlation_pearson'
+                               , 'AZD6244_correlation_pearson'
+                               , 'Erlotinib_correlation_pearson'
+                               , 'Irinotecan_correlation_pearson'
+                               , 'L-685458_correlation_pearson'
+                               , 'LBW242_correlation_pearson'
+                               , 'Lapatinib_correlation_pearson'
+                               , 'Nilotinib_correlation_pearson'
+                               , 'Nutlin-3_correlation_pearson'
+                               , 'PD-0325901_correlation_pearson'
+                               , 'PD-0332991_correlation_pearson'
+                               , 'PF2341066_correlation_pearson'
+                               , 'PHA-665752_correlation_pearson'
+                               , 'PLX4720_correlation_pearson'
+                               , 'Paclitaxel_correlation_pearson'
+                               , 'Panobinostat_correlation_pearson'
+                               , 'RAF265_correlation_pearson'
+                               , 'Sorafenib_correlation_pearson'
+                               , 'TAE684_correlation_pearson'
+                               , 'TKI258_correlation_pearson'
+                               , 'Topotecan_correlation_pearson'
+                               , 'ZD-6474_correlation_pearson'
                                , 'ranked_features_per_phenotype_correlation_pearson'
                                , 'top_features_per_phenotype_correlation_pearson'
                                ] 
@@ -64,6 +88,29 @@ def main():
                ,'t_test': [  
                                  'BENCHMARK_3_FP_t_test.yml'
                                , '17-AAG_correlation_t_test'
+                               , 'AEW541_correlation_t_test'
+                               , 'AZD0530_correlation_t_test'
+                               , 'AZD6244_correlation_t_test'
+                               , 'Erlotinib_correlation_t_test'
+                               , 'Irinotecan_correlation_t_test'
+                               , 'L-685458_correlation_t_test'
+                               , 'LBW242_correlation_t_test'
+                               , 'Lapatinib_correlation_t_test'
+                               , 'Nilotinib_correlation_t_test'
+                               , 'Nutlin-3_correlation_t_test'
+                               , 'PD-0325901_correlation_t_test'
+                               , 'PD-0332991_correlation_t_test'
+                               , 'PF2341066_correlation_t_test'
+                               , 'PHA-665752_correlation_t_test'
+                               , 'PLX4720_correlation_t_test'
+                               , 'Paclitaxel_correlation_t_test'
+                               , 'Panobinostat_correlation_t_test'
+                               , 'RAF265_correlation_t_test'
+                               , 'Sorafenib_correlation_t_test'
+                               , 'TAE684_correlation_t_test'
+                               , 'TKI258_correlation_t_test'
+                               , 'Topotecan_correlation_t_test'
+                               , 'ZD-6474_correlation_t_test'
                                , 'ranked_features_per_phenotype_correlation_t_test'
                                , 'top_features_per_phenotype_correlation_t_test'
                                ]
@@ -102,9 +149,9 @@ def main():
     for key in BENCHMARK.keys(): 
         BENCHMARK_list = BENCHMARK[key]
         BENCHMARK_YML  = BENCHMARK_list[0]
-        for BENCHMARK_name in BENCHMARK_list[1:] :
-            verify_benchmark(BENCHMARK_name,BENCHMARK_YML)
-            os.system('rm ./run_dir/results/*')
+        # for BENCHMARK_name in BENCHMARK_list[1:] :
+        verify_benchmark(BENCHMARK_list[1:], BENCHMARK_YML)
+        os.system('rm ./run_dir/results/*')
 
 if __name__ == "__main__":
     main()

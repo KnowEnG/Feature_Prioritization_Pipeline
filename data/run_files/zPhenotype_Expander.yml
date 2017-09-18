@@ -1,0 +1,16 @@
+# --------------------------------------------------------------------
+# - Analysis Method: run_pheno_expander          -
+# --------------------------------------------------------------------
+method:                     phenotype_expander       
+
+# --------------------------------------------------------------------
+# - phenotype            txt file               -
+# --------------------------------------------------------------------
+phenotype_name_full_path:   ../data/spreadsheets/UCEC_phenotype.txt
+
+# --------------------------------------------------------------------
+# - directory where the result and temporary files will be written   -
+# --------------------------------------------------------------------
+results_directory:          ./run_dir/results
+
+threshold: 8

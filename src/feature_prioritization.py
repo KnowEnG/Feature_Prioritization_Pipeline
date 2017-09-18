@@ -12,9 +12,15 @@ def bootstrap_correlation(run_parameters):
     from feature_prioritization_toolbox import run_bootstrap_correlation
     run_bootstrap_correlation(run_parameters)
 
+def phenotype_expander(run_parameters):
+    """ phenotype expander"""
+    from phenotype_expander_toolbox import phenotype_expander
+    phenotype_expander(run_parameters)
+
 SELECT = {
     "correlation": correlation,
-    "bootstrap_correlation": bootstrap_correlation }
+    "bootstrap_correlation": bootstrap_correlation,
+    "phenotype_expander": phenotype_expander }
 
 def main():
     """

@@ -78,6 +78,12 @@ run_single_drug_t_test:
 run_multidrug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
 
+# -------
+# - EVALUATION 
+# -------
+run_pheno_expander:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file zPhenotype_Expander.yml
+
 # ----------------------------------------------------------------
 # - VERIFICATION TESTS RUN SECTION                               -
 # ----------------------------------------------------------------

@@ -143,6 +143,10 @@ def main():
                                , 'ranked_features_per_phenotype_bootstrap_correlation_t_test'
                                , 'top_features_per_phenotype_bootstrap_correlation_t_test'
                                ]
+               ,'phenotype_expander': [
+                               'zPhenotype_Expander.yml'
+                               ,'phenotype_expander_result'
+                               ]
                 }
 
     os.system('make env_setup')

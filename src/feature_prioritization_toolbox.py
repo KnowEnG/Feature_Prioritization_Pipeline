@@ -308,17 +308,17 @@ def write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parame
     Output:
         {phenotype}_{method}_{correlation_measure}_{timestamp}_viz.tsv
     """
-    result_df.to_csv(get_output_file_name(run_parameters, 'results_directory', phenotype_name, 'viz'), header=True, index=False, sep='\t')
+    result_df.to_csv(get_output_file_name(run_parameters, 'results_directory', phenotype_name, 'viz'), header=True, index=False, sep='\t', float_format='%g')
 
     download_result_df                 = pd.DataFrame(data=None, index=None, columns=[phenotype_name])
     download_result_df[phenotype_name] = result_df['Feature_ID']
     download_result_df.to_csv(
-        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'download'), header=True, index=False, sep='\t')
+        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'download'), header=True, index=False, sep='\t', float_format='%g')
 
     top_features                       = download_result_df.values[: run_parameters['top_beta_of_sort']]
     update_orig_result_df              = pd.DataFrame(np.in1d(feature_name_list, top_features).astype(int), index=feature_name_list, columns=[phenotype_name])
     update_orig_result_df.to_csv(
-        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'original'), header=True, index=True, sep='\t')
+        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'original'), header=True, index=True, sep='\t', float_format='%g')
 
 
 def write_phenotype_data_all(run_parameters):
@@ -368,10 +368,10 @@ def write_phenotype_data_all(run_parameters):
     all_phenotypes_download_df.index = range(1, all_phenotypes_download_df.shape[0]+1)
 
     all_phenotypes_download_df.to_csv(
-        get_output_file_name(run_parameters, 'results_directory', 'ranked_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
+        get_output_file_name(run_parameters, 'results_directory', 'ranked_features_per_phenotype', 'download'), header=True, index=True, sep='\t', float_format='%g')
 
     all_phenotypes_original_df.to_csv(
-        get_output_file_name(run_parameters, 'results_directory', 'top_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
+        get_output_file_name(run_parameters, 'results_directory', 'top_features_per_phenotype', 'download'), header=True, index=True, sep='\t', float_format='%g')
 
 
 def get_output_file_name(run_parameters, dir_name_key, prefix_string, suffix_string='', type_suffix='tsv'):

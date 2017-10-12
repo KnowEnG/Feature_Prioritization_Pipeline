@@ -40,6 +40,8 @@ run_all_Benchmarks: run_pearson run_bootstrap_pearson run_t_test run_bootstrap_t
 # -------
 # pearson
 # -------
+run_all_pearson: run_pearson run_bootstrap_pearson  
+
 run_pearson:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_1_FP_pearson.yml
 run_bootstrap_pearson:
@@ -48,6 +50,8 @@ run_bootstrap_pearson:
 # -------
 # t_test
 # -------
+run_all_t_test: run_t_test run_bootstrap_t_test 
+	
 run_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_3_FP_t_test.yml
 run_bootstrap_t_test:
@@ -73,6 +77,12 @@ run_single_drug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_3_FP_single_drug_t_test.yml
 run_multidrug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
+
+# -------
+# - EVALUATION 
+# -------
+run_pheno_expander:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file zPhenotype_Expander.yml
 
 # ----------------------------------------------------------------
 # - VERIFICATION TESTS RUN SECTION                               -

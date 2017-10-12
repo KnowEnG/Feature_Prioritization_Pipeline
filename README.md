@@ -1,9 +1,9 @@
 # KnowEnG's Feature Prioritization Pipeline
 This is the Knowledge Engine for Genomics (KnowEnG), an NIH, BD2K Center of Excellence, Feature Prioritization Pipeline.
 
-This pipeline **ranks** the rows of a given spreadsheet, where spreadsheet's rows correspond to feature-labels and columns correspond to sample-labels. The ranking is based on correlating feature expression data against pheno-type data.
+This pipeline **ranks** the rows of a given spreadsheet, where spreadsheet's rows correspond to feature-labels and columns correspond to sample-labels. The ranking is based on correlating feature expression data against response data.
 
-There are four prioritization methods, using either pearson or t-test as the measure of correlation:
+There are two prioritization methods, using either pearson or t-test as the measure of correlation:
 
 
 | **Options**                                        | **Method**                           | **Parameters**            |
@@ -91,11 +91,11 @@ __***Follow steps 1-3 above then do the following:***__
  
 ### * Create run_paramters file  (YAML Format)
  ``` 
-Look for examples of run_parameters in ./Feature_Prioritization_Pipeline/data/run_files/zTEMPLATE_GP_BENCHMARKS.yml
+Look for examples of run_parameters in ./Feature_Prioritization_Pipeline/data/run_files/zTEMPLATE_FP_BENCHMARKS.yml
  ```
 ### * Modify run_paramters file  (YAML Format)
 ```
-set the spreadsheet and phenotype data file names to point to your data
+set the spreadsheet and response data file names to point to your data
 ```
 
 ### * Run the Feature Prioritization Pipeline:
@@ -107,7 +107,7 @@ set the spreadsheet and phenotype data file names to point to your data
    
   * Run
    ```
-  python3 ../src/feature_prioritization.py -run_directory ./ -run_file zTEMPLATE_GP_BENCHMARKS.yml
+  python3 ../src/feature_prioritization.py -run_directory ./ -run_file zTEMPLATE_FP_BENCHMARKS.yml
    ```
 
 * * * 
@@ -119,31 +119,31 @@ set the spreadsheet and phenotype data file names to point to your data
 | method                     | correlation or  bootstrap_correlation | Choose feature prioritization method                        |
 | correlation_measure        | pearson or t_test                     | Choose correlation measure method                           |
 | spreadsheet_name_full_path | directory+spreadsheet_name            |  Path and file name of user supplied feature sets           |
-| phenotype_name_full_path   | directory+phenotype_response          | Path and file name of user supplied phenotype response file |
+| phenotype_name_full_path   | directory+response                    | Path and file name of user supplied response file           |
 | results_directory          | directory                             | Directory to save the output files                          |
 | number_of_bootstraps       | 5                                     | Number of random samplings                                  |
 | cols_sampling_fraction     | 0.9                                   | Select 90% of spreadsheet columns                           |
 | top_beta_of_sort           | 100                                   | Number of top features selected                             |
 
 spreadsheet_name = CCLE_Expression_ensembl.df</br>
-phenotype_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt
+response_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt
 
 * * * 
 ## Description of Output files saved in results directory
 * * * 
 
-* Any method saves separate files per phenotype with name {phenotype}\_{method}\_{correlation_measure}\_{timestamp}\_viz.tsv. Features are sorted in descending order based on `visualization_score`. </br>  
+* Any method saves separate files per response with name {response}\_{method}\_{correlation_measure}\_{timestamp}\_viz.tsv. Features are sorted in descending order based on `visualization_score`. </br>  
 
  | **Response**  | **Feature_ID** | **quantitative_sorting_score** | **visualization_score** | **baseline_score** |
  |:-------------:|:--------------:|:------------------------------:|:-----------------------:|:------------------:|
- |   phenotype 1 |   feature 1    |    float                       |    float                |   float            | 
+ |   response 1  |   feature 1    |    float                       |    float                |   float            | 
  |    ...        |   ...          |    ...                         |    ...                  |   ...              | 
- |   phenotype 1 |   feature n    |    float                       |    float                |   float            | 
+ |   response 1  |   feature n    |    float                       |    float                |   float            | 
 
 
-* Any method saves sorted features for each phenotype with name ranked_features_per_phenotype\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
+* Any method saves sorted features for each response with name ranked_features_per_response\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
 
- |**Ranking**| **phenotype 1**                  |**phenotype 2**                  |**...**|**phenotype n**                  |
+ |**Ranking**| **response 1**                  |**response 2**                  |**...**|**response n**                  |
  |:---------:| :------------------------------: |:------------------------------: | :---: |:-------------------------------:|
  |1          | feature </br> (most significant) |feature </br> (most significant) |...    |feature </br> (most significant) |
  |...        |...                               | ...                             |...    |...                              |
@@ -151,9 +151,9 @@ phenotype_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt
  
  
  
-* Any method saves spreadsheet with top ranked features per phenotype with name  top_features_per_phenotype\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
+* Any method saves spreadsheet with top ranked features per response with name  top_features_per_response\_{method}\_{correlation_measure}\_{timestamp}\_download.tsv.
 
- |**Features**            | **phenotype 1**      |**...**|**phenotype n**       |
+ |**Features**            | **response 1**      |**...**|**response n**       |
  | :--------------------: |:--------------------:| :---: |:--------------------:|
  | feature 1              |1/0                   |...    |1/0                   |
  | ...                    |...                   |...    |...                   |

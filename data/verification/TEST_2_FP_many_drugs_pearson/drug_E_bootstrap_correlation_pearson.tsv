@@ -1,0 +1,8 @@
+Response	Feature_ID	quantitative_sorting_score	visualization_score	baseline_score
+drug_E	g3	5.93	1	-0.702902
+drug_E	g5	5.93	1	-0.702902
+drug_E	g4	5.84	0.90625	0.534205
+drug_E	g1	5.26	0.302083	0.14058
+drug_E	g7	5.26	0.302083	0.14058
+drug_E	g2	4.97	0	0.590438
+drug_E	g6	4.97	0	0.590438

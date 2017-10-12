@@ -26,14 +26,34 @@ def run_correlation(run_parameters):
     spreadsheet_df = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
     phenotype_df = phenotype_df.T
     
+    number_of_jobs = len(phenotype_df.index)
+    jobs_id = range(0, number_of_jobs)
+    zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, jobs_id)
+    dstutil.parallelize_processes_locally(run_correlation_worker, zipped_arguments, number_of_jobs)
+    write_phenotype_data_all(run_parameters)
+    kn.remove_dir(run_parameters["results_tmp_directory"])
+
+def run_correlation_worker(run_parameters, spreadsheet_df, phenotype_df, job_id):
+    """ core function for parallel run_correlation
+    Args:
+        run_parameters:  dict of parameters
+        spreadsheet_df:  spreadsheet data frame
+        phenotype_df:    phenotype data frame
+        job_id:          parallel iteration number
+    """
+    # selects the ith row in phenotype_df
+
+    np.random.seed(job_id)
+
+    phenotype_df = phenotype_df.iloc[[job_id], :]
+
+    spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
+
     pc_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
 
     feature_name_list = spreadsheet_df.index
     phenotype_name = phenotype_df.index.values[0]
     generate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters)
-    write_phenotype_data_all(run_parameters)
-    kn.remove_dir(run_parameters["results_tmp_directory"])
-
 
 def generate_correlation_output(pc_array, phenotype_name, feature_name_list, run_parameters):
     """ Save final output of correlation
@@ -54,7 +74,14 @@ def generate_correlation_output(pc_array, phenotype_name, feature_name_list, run
     
     output_val          = np.column_stack((phenotype_name_list, feature_name_list, pc_array, viz_score, baseline_score))
     df_header           = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
-    result_df           = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
+    
+    result_df           = pd.DataFrame(columns=df_header)
+    result_df['Response']                   = phenotype_name_list
+    result_df['Feature_ID']                 = feature_name_list
+    result_df['quantitative_sorting_score'] = pc_array
+    result_df['visualization_score']        = viz_score
+    result_df['baseline_score']             = baseline_score
+    result_df = result_df.sort_values("visualization_score", ascending=0)
     result_df.index     = range(result_df.shape[0])
 
     write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parameters)
@@ -136,7 +163,14 @@ def generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
 
     output_val          = np.column_stack((phenotype_name_list, feature_name_list, borda_count, viz_score, pearson_array))
     df_header           = ['Response', 'Feature_ID', 'quantitative_sorting_score', 'visualization_score', 'baseline_score']
-    result_df           = pd.DataFrame(output_val, columns=df_header).sort_values("visualization_score", ascending=0)
+    
+    result_df           = pd.DataFrame(columns=df_header)
+    result_df['Response']                   = phenotype_name_list
+    result_df['Feature_ID']                 = feature_name_list
+    result_df['quantitative_sorting_score'] = borda_count
+    result_df['visualization_score']        = viz_score
+    result_df['baseline_score']             = pearson_array
+    result_df = result_df.sort_values("visualization_score", ascending=0)
     result_df.index     = range(result_df.shape[0])
 
     write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parameters)
@@ -288,17 +322,17 @@ def write_one_phenotype(result_df, phenotype_name, feature_name_list, run_parame
     Output:
         {phenotype}_{method}_{correlation_measure}_{timestamp}_viz.tsv
     """
-    result_df.to_csv(get_output_file_name(run_parameters, 'results_directory', phenotype_name, 'viz'), header=True, index=False, sep='\t')
+    result_df.to_csv(get_output_file_name(run_parameters, 'results_directory', phenotype_name, 'viz'), header=True, index=False, sep='\t', float_format="%g")
 
     download_result_df                 = pd.DataFrame(data=None, index=None, columns=[phenotype_name])
     download_result_df[phenotype_name] = result_df['Feature_ID']
     download_result_df.to_csv(
-        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'download'), header=True, index=False, sep='\t')
+        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'download'), header=True, index=False, sep='\t', float_format="%g")
 
     top_features                       = download_result_df.values[: run_parameters['top_beta_of_sort']]
     update_orig_result_df              = pd.DataFrame(np.in1d(feature_name_list, top_features).astype(int), index=feature_name_list, columns=[phenotype_name])
     update_orig_result_df.to_csv(
-        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'original'), header=True, index=True, sep='\t')
+        get_output_file_name(run_parameters, 'results_tmp_directory', phenotype_name, 'original'), header=True, index=True, sep='\t', float_format="%g")
 
 
 def write_phenotype_data_all(run_parameters):
@@ -348,11 +382,10 @@ def write_phenotype_data_all(run_parameters):
     all_phenotypes_download_df.index = range(1, all_phenotypes_download_df.shape[0]+1)
 
     all_phenotypes_download_df.to_csv(
-        get_output_file_name(run_parameters, 'results_directory', 'ranked_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
+        get_output_file_name(run_parameters, 'results_directory', 'ranked_features_per_phenotype', 'download'), header=True, index=True, sep='\t', float_format="%g")
 
     all_phenotypes_original_df.to_csv(
-        get_output_file_name(run_parameters, 'results_directory', 'top_features_per_phenotype', 'download'), header=True, index=True, sep='\t')
-
+        get_output_file_name(run_parameters, 'results_directory', 'top_features_per_phenotype', 'download'), header=True, index=True, sep='\t', float_format="%g")
 
 def get_output_file_name(run_parameters, dir_name_key, prefix_string, suffix_string='', type_suffix='tsv'):
     """ get the full directory / filename for writing
@@ -370,5 +403,5 @@ def get_output_file_name(run_parameters, dir_name_key, prefix_string, suffix_str
                                     run_parameters['method'] + '_' + run_parameters["correlation_measure"])
 
     output_file_name = kn.create_timestamped_filename(output_file_name) + '_' + suffix_string + '.' + type_suffix
-
     return output_file_name
+

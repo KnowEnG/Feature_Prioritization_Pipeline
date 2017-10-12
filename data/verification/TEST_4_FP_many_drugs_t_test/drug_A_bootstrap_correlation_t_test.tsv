@@ -1,8 +1,8 @@
 Response	Feature_ID	quantitative_sorting_score	visualization_score	baseline_score
-drug_A	g1	7.0		-0.4472136
-drug_A	g2	7.0		-3.0
-drug_A	g3	7.0		-0.4472136
-drug_A	g4	7.0		0.4472136
-drug_A	g5	7.0		-0.4472136
-drug_A	g6	7.0		-3.0
-drug_A	g7	7.0		-0.4472136
+drug_A	g1	7		-0.447214
+drug_A	g2	7		-3
+drug_A	g3	7		-0.447214
+drug_A	g4	7		0.447214
+drug_A	g5	7		-0.447214
+drug_A	g6	7		-3
+drug_A	g7	7		-0.447214

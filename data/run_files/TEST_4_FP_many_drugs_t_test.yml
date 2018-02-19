@@ -31,5 +31,6 @@ cols_sampling_fraction:     0.8 # 0.8 means 80% of columns
 # --------------------------------------------------------------------
 # - Number of features to retain                                     -
 # --------------------------------------------------------------------
+top_gamma_of_sort:           100
 top_beta_of_sort:           2
 

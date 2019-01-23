@@ -20,16 +20,22 @@ def run_correlation(run_parameters):
     Args:
         run_parameters: parameter set dictionary.
     """
+    max_cpu = run_parameters["max_cpu"]
     run_parameters["results_tmp_directory"] = kn.create_dir(run_parameters["results_directory"], 'tmp')
 
     phenotype_df = kn.get_spreadsheet_df(run_parameters["phenotype_name_full_path"])
     spreadsheet_df = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
     phenotype_df = phenotype_df.T
-    
-    number_of_jobs = len(phenotype_df.index)
-    jobs_id = range(0, number_of_jobs)
-    zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, jobs_id)
-    dstutil.parallelize_processes_locally(run_correlation_worker, zipped_arguments, number_of_jobs)
+
+    len_phenotype = len(phenotype_df.index)
+    array_of_jobs = range(0, len_phenotype)
+
+    for i in range(0, len_phenotype, max_cpu):
+        jobs_id = array_of_jobs[i:i + max_cpu]
+        number_of_jobs = len(jobs_id)
+
+        zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, jobs_id)
+        dstutil.parallelize_processes_locally(run_correlation_worker, zipped_arguments, number_of_jobs)
     write_phenotype_data_all(run_parameters)
     kn.remove_dir(run_parameters["results_tmp_directory"])
 
@@ -49,7 +55,7 @@ def run_correlation_worker(run_parameters, spreadsheet_df, phenotype_df, job_id)
 
     spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
 
-    pc_array = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
+    pc_array = get_correlation(spreadsheet_df.values, phenotype_df.values[0], run_parameters)
 
     feature_name_list = spreadsheet_df.index
     phenotype_name = phenotype_df.index.values[0]
@@ -93,17 +99,24 @@ def run_bootstrap_correlation(run_parameters):
     Args:
         run_parameters: parameter set dictionary.
     """
+    max_cpu             = run_parameters["max_cpu"]
     run_parameters["results_tmp_directory"] = kn.create_dir(run_parameters["results_directory"], 'tmp')
 
     phenotype_df        = kn.get_spreadsheet_df(run_parameters["phenotype_name_full_path"])
     spreadsheet_df      = kn.get_spreadsheet_df(run_parameters["spreadsheet_name_full_path"])
     phenotype_df        = phenotype_df.T
     n_bootstraps        = run_parameters["number_of_bootstraps"]
-    number_of_jobs      = len(phenotype_df.index)
-    jobs_id             = range(0, number_of_jobs)
-    zipped_arguments    = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, n_bootstraps, jobs_id)
 
-    dstutil.parallelize_processes_locally(run_bootstrap_correlation_worker, zipped_arguments, number_of_jobs)
+    len_phenotype = len(phenotype_df.index)
+    array_of_jobs = range(0, len_phenotype)
+
+    for i in range(0, len_phenotype, max_cpu):
+        jobs_id = array_of_jobs[i:i + max_cpu]
+        number_of_jobs = len(jobs_id)
+
+        zipped_arguments = dstutil.zip_parameters(run_parameters, spreadsheet_df, phenotype_df, n_bootstraps, jobs_id)
+
+        dstutil.parallelize_processes_locally(run_bootstrap_correlation_worker, zipped_arguments, number_of_jobs)
     write_phenotype_data_all(run_parameters)
     kn.remove_dir(run_parameters["results_tmp_directory"])
 
@@ -125,11 +138,11 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
 
     spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
 
-    pearson_array     = get_correlation(spreadsheet_df.as_matrix(), phenotype_df.values[0], run_parameters)
+    pearson_array     = get_correlation(spreadsheet_df.values, phenotype_df.values[0], run_parameters)
     borda_count       = np.zeros(spreadsheet_df.shape[0])
     gm_accumulator    = np.ones(spreadsheet_df.shape[0])
     for bootstrap_number in range(0, n_bootstraps):
-        sample_random, sample_permutation = sample_a_matrix_pearson(spreadsheet_df.as_matrix(), 1.0, run_parameters["cols_sampling_fraction"])
+        sample_random, sample_permutation = sample_a_matrix_pearson(spreadsheet_df.values, 1.0, run_parameters["cols_sampling_fraction"])
         phenotype_response                = phenotype_df.values[0, None]
         phenotype_response                = phenotype_response[0, sample_permutation]
         pc_array                          = get_correlation(sample_random, phenotype_response, run_parameters)

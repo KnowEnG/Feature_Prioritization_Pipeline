@@ -1,4 +1,4 @@
-FROM knowengdev/base_image:09_19_2017
+FROM knowengdev/base_image:08_01_2018
 
 ENV SRC_LOC /home
 

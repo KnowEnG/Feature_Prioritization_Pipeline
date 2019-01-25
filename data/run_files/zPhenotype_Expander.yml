@@ -13,4 +13,4 @@ phenotype_name_full_path:   ../data/spreadsheets/UCEC_phenotype.txt
 # --------------------------------------------------------------------
 results_directory:          ./run_dir/results
 
-threshold: 8
+threshold:                  8

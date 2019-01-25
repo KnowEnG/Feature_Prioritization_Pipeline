@@ -114,16 +114,17 @@ set the spreadsheet and response data file names to point to your data
 ## Description of "run_parameters" file
 * * * 
 
-| **Key**                    | **Value**                             | **Comments**                                                |
-| -------------------------- | ------------------------------------- | ----------------------------------------------------------- |
-| method                     | correlation or  bootstrap_correlation | Choose feature prioritization method                        |
-| correlation_measure        | pearson or t_test                     | Choose correlation measure method                           |
-| spreadsheet_name_full_path | directory+spreadsheet_name            |  Path and file name of user supplied feature sets           |
-| phenotype_name_full_path   | directory+response                    | Path and file name of user supplied response file           |
-| results_directory          | directory                             | Directory to save the output files                          |
-| number_of_bootstraps       | 5                                     | Number of random samplings                                  |
-| cols_sampling_fraction     | 0.9                                   | Select 90% of spreadsheet columns                           |
-| top_beta_of_sort           | 100                                   | Number of top features selected                             |
+| **Key**                    | **Value**                             | **Comments**                                                            |
+| -------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
+| method                     | correlation or  bootstrap_correlation | Choose feature prioritization method                                    |
+| correlation_measure        | pearson or t_test                     | Choose correlation measure method                                       |
+| spreadsheet_name_full_path | directory+spreadsheet_name            | Path and file name of user supplied feature sets                        |
+| phenotype_name_full_path   | directory+response                    | Path and file name of user supplied response file                       |
+| results_directory          | directory                             | Directory to save the output files                                      |
+| number_of_bootstraps       | 5                                     | Number of random samplings                                              |
+| cols_sampling_fraction     | 0.9                                   | Select 90% of spreadsheet columns                                       |
+| top_beta_of_sort           | 100                                   | Number of top features selected                                         |
+| max_cpu                    | 4                                     | Maximum number of processors to use in the parallel correlation section |
 
 spreadsheet_name = CCLE_Expression_ensembl.df</br>
 response_name = CCLE_drug_ec50_cleaned_NAremoved_pearson.txt

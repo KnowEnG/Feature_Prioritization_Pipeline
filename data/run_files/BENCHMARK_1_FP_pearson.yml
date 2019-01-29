@@ -23,5 +23,6 @@ results_directory:          ./run_dir/results
 # --------------------------------------------------------------------
 # - Number of features to retain                                     -
 # --------------------------------------------------------------------
-top_gamma_of_sort:           100
+top_gamma_of_sort:          100
 top_beta_of_sort:           100
+max_cpu:                    4

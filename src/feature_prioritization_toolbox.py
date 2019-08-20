@@ -55,7 +55,7 @@ def run_correlation_worker(run_parameters, spreadsheet_df, phenotype_df, job_id)
 
     spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
 
-    pc_array = get_correlation(spreadsheet_df.values, phenotype_df.values[0], run_parameters)
+    pc_array = get_correlation(spreadsheet_df, phenotype_df, run_parameters)
 
     feature_name_list = spreadsheet_df.index
     phenotype_name = phenotype_df.index.values[0]
@@ -138,22 +138,23 @@ def run_bootstrap_correlation_worker(run_parameters, spreadsheet_df, phenotype_d
 
     spreadsheet_df, phenotype_df, msg = datacln.check_input_value_for_gene_prioritazion(spreadsheet_df, phenotype_df)
 
-    pearson_array     = get_correlation(spreadsheet_df.values, phenotype_df.values[0], run_parameters)
+    pearson_array     = get_correlation(spreadsheet_df, phenotype_df, run_parameters)
     borda_count       = np.zeros(spreadsheet_df.shape[0])
     gm_accumulator    = np.ones(spreadsheet_df.shape[0])
     for bootstrap_number in range(0, n_bootstraps):
-        sample_random, sample_permutation = sample_a_matrix_pearson(spreadsheet_df.values, 1.0, run_parameters["cols_sampling_fraction"])
-        phenotype_response                = phenotype_df.values[0, None]
-        phenotype_response                = phenotype_response[0, sample_permutation]
-        pc_array                          = get_correlation(sample_random, phenotype_response, run_parameters)
-        borda_count                       = sum_array_ranking_to_borda_count(borda_count, np.abs(pc_array))
-        gm_accumulator                    = (np.abs(pc_array) + EPSILON_0) * gm_accumulator
+        # note: rows_sampling_fraction is not currently a run parameter
+        spreadsheet_sample_df, phenotype_sample_df = sample_dfs(\
+            spreadsheet_df, phenotype_df, 1.0, run_parameters["cols_sampling_fraction"])
+        pc_array = get_correlation(\
+            spreadsheet_sample_df, phenotype_sample_df, run_parameters)
+        borda_count    = sum_array_ranking_to_borda_count(borda_count, np.abs(pc_array))
+        gm_accumulator = (np.abs(pc_array) + EPSILON_0) * gm_accumulator
 
-    pcc_gm_array      = gm_accumulator ** (1 / n_bootstraps)
-    borda_count       = borda_count / n_bootstraps
-    phenotype_name    = phenotype_df.index.values[0]
-    feature_name_list = spreadsheet_df.index
-    viz_score         = (borda_count - min(borda_count)) / (max(borda_count) - min(borda_count))
+    pcc_gm_array       = gm_accumulator ** (1 / n_bootstraps)
+    borda_count        = borda_count / n_bootstraps
+    phenotype_name     = phenotype_df.index.values[0]
+    feature_name_list  = spreadsheet_df.index
+    viz_score          = (borda_count - min(borda_count)) / (max(borda_count) - min(borda_count))
 
     generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
                                           phenotype_name, feature_name_list, run_parameters)
@@ -190,49 +191,47 @@ def generate_bootstrap_correlation_output(borda_count, viz_score, pearson_array,
 
 
 
-def get_correlation(spreadsheet_mat, phenotype_response, run_parameters):
+def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
     """ correlation function definition for all run methods
 
     Args:
-        spreadsheet_mat: features x samples
-        phenotype_response: one x samples
+        spreadsheet_df: features x samples
+        phenotype_df: one x samples
         run_parameters: with key 'correlation_measure'
 
     Returns:
         correlation_array: features x one
     """
-    correlation_array = np.zeros(spreadsheet_mat.shape[0])
-    if 'correlation_measure' in run_parameters:
-        if run_parameters['correlation_measure'] == 'pearson':
 
-            spreadsheet_mat        = spreadsheet_mat - spreadsheet_mat.mean(axis=1).reshape((-1, 1))
-            phenotype_response     = phenotype_response - phenotype_response.mean()
-            spreadsheet_mat_var    = np.std(spreadsheet_mat, axis=1)
-            phenotype_response_var = np.std(phenotype_response)
-            numerator              = spreadsheet_mat.dot(phenotype_response)
-            denominator            = spreadsheet_mat_var * phenotype_response_var * spreadsheet_mat.shape[1]
+    if run_parameters['correlation_measure'] == 'pearson':
 
-            with np.errstate(divide='ignore', invalid='ignore'):
-                correlation_array                 = np.true_divide(numerator, denominator)
-                correlation_array[denominator==0] = 0
+        spreadsheet_mat        = spreadsheet_df.values
+        phenotype_arr          = phenotype_df.values[0]
+        spreadsheet_mat        = spreadsheet_mat - spreadsheet_mat.mean(axis=1).reshape((-1, 1))
+        phenotype_arr          = phenotype_arr - phenotype_arr.mean()
+        spreadsheet_mat_var    = np.std(spreadsheet_mat, axis=1)
+        phenotype_arr_var      = np.std(phenotype_arr)
+        numerator              = spreadsheet_mat.dot(phenotype_arr)
+        denominator            = spreadsheet_mat_var * phenotype_arr_var * spreadsheet_mat.shape[1]
 
-            return correlation_array
+        with np.errstate(divide='ignore', invalid='ignore'):
+            correlation_array                 = np.true_divide(numerator, denominator)
+            correlation_array[denominator==0] = 0
 
-        if run_parameters['correlation_measure'] == 't_test':
-        
-            a     = spreadsheet_mat[:, phenotype_response!=0]
-            b     = spreadsheet_mat[:, phenotype_response==0]
-            d     = np.mean(a, axis=1) - np.mean(b, axis=1)
-            denom = np.sqrt(np.var(a, axis=1, ddof=1)/a.shape[1] + np.var(b, axis=1, ddof=1)/b.shape[1])
+    elif run_parameters['correlation_measure'] == 't_test':
 
-            with np.errstate(divide='ignore', invalid='ignore'):
-                correlation_array                  = np.divide(d, denom)
-                correlation_array[np.isnan(denom)] = 0
+        spreadsheet_mat = spreadsheet_df.values
+        phenotype_arr   = phenotype_df.values[0]
+        a               = spreadsheet_mat[:, phenotype_arr!=0]
+        b               = spreadsheet_mat[:, phenotype_arr==0]
+        d               = np.mean(a, axis=1) - np.mean(b, axis=1)
+        denom           = np.sqrt(np.var(a, axis=1, ddof=1)/a.shape[1] + np.var(b, axis=1, ddof=1)/b.shape[1])
 
-            return correlation_array
+        with np.errstate(divide='ignore', invalid='ignore'):
+            correlation_array                  = np.divide(d, denom)
+            correlation_array[np.isnan(denom)] = 0
 
     return correlation_array
-
 
 def sum_array_ranking_to_borda_count(borda_count, corr_array):
     """ sum to borda count with a contigous array added to borda count
@@ -266,31 +265,53 @@ def sum_array_ranking_to_borda_count(borda_count, corr_array):
 
     return borda_count + borda_add
 
-
-def sample_a_matrix_pearson(spreadsheet_mat, rows_fraction, cols_fraction):
-    """ percent_sample x percent_sample random sample, from spreadsheet_mat.
+def sample_dfs(spreadsheet_df, phenotype_df, rows_fraction, cols_fraction):
+    """Selects a random subset of the samples according to `cols_fraction` and a
+    random subset of the features according to `rows_fraction`. Returns the
+    portion of `spreadsheet_df` containing the selected samples and having all
+    zeros for the unselected features. Returns the portion of `phenotype_df`
+    containing the selected samples.
 
     Args:
-        spreadsheet_mat: feature x sample spread sheet as matrix.
-        percent_sample: decimal fraction (slang-percent) - [0 : 1].
+        spreadsheet_df: feature x sample spreadsheet as a df.
+        phenotype_df: one x sample phenotype data as a df.
+        rows_fraction: the fraction of rows to keep in the returned sample - [0 : 1].
+        cols_fraction: the fraction of cols to keep in the returned sample - [0 : 1].
 
     Returns:
-        sample_random: A specified precentage sample of the spread sheet.
-        sample_permutation: the array that correponds to columns sample.
+        spreadsheet_sample_df: a df containing samples from `spreadsheet_df`.
+        phenotype_sample_df: a df containing samples from `phenotype_df`.
     """
-    features_size        = int(np.round(spreadsheet_mat.shape[0] * (1 - rows_fraction)))
-    features_permutation = np.random.permutation(spreadsheet_mat.shape[0])
-    features_permutation = features_permutation[0:features_size].T
+    # the following approach ensures results consistent with earlier versions
+    # of the FP image (i.e., deliberately avoiding pandas shortcuts here)
+    # for consistency of results, we also have to do the np.random.permutation
+    # call for features prior to the call for samples
 
-    patients_size        = int(np.round(spreadsheet_mat.shape[1] * cols_fraction))
-    sample_permutation   = np.random.permutation(spreadsheet_mat.shape[1])
-    sample_permutation   = sample_permutation[0:patients_size]
+    # determine which rows are to be DISCARDED
+    original_feature_count         = spreadsheet_df.shape[0]
+    discarded_feature_count        = int(np.round(original_feature_count * (1 - rows_fraction)))
+    discarded_features_permutation = np.random.permutation(original_feature_count)[0:discarded_feature_count]
 
-    sample_random                                   = spreadsheet_mat[:, sample_permutation]
-    sample_random[features_permutation[:, None], :] = 0
+    # determine which columns are to be KEPT
+    original_sample_count          = spreadsheet_df.shape[1]
+    kept_sample_count              = int(np.round(original_sample_count * cols_fraction))
+    kept_sample_permutation        = np.random.permutation(original_sample_count)[0:kept_sample_count]
 
-    return sample_random, sample_permutation
+    # create new dfs with only the kept columns
+    new_spreadsheet_df             = spreadsheet_df.iloc[:, kept_sample_permutation]
+    new_phenotype_df               = phenotype_df.iloc[:, kept_sample_permutation]
 
+    # fill discarded features with zeros
+    if discarded_feature_count:
+        # note: need to copy the spreadsheet to ensure we aren't modifying a
+        # shared underlying representation of the data
+        # TODO do downstream calculations really need discarded features set to
+        # zero, or can we just exclude the discarded features' rows from the df?
+        # if the latter, we could avoid the deep copy
+        new_spreadsheet_df = new_spreadsheet_df.copy(deep=True)
+        new_spreadsheet_df.iloc[discarded_features_permutation, :] = 0
+
+    return new_spreadsheet_df, new_phenotype_df
 
 def zscore_dataframe(features_by_sample_df):
     """ zscore by rows for features x samples dataframe

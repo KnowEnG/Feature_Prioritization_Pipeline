@@ -236,7 +236,7 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
         pandas2ri.activate()
 
         # tell R to load the script
-        r.source(get_edgeR_script_path()))
+        r.source(get_edgeR_script_path())
 
         # run the method in the script
         correlations_matrix = r['calculate.correlations'](\
@@ -453,6 +453,6 @@ def get_edgeR_script_path():
     # we expect to find the script in a parallel directory called "r_src"
     py_script_dir = os.path.dirname(os.path.realpath(__file__))
     parent_dir = os.path.dirname(py_script_dir)
-    r_script_dir = os.path_join(parent_dir, "r_src")
+    r_script_dir = os.path.join(parent_dir, "r_src")
 
     return os.path.join(r_script_dir, 'edgeR_fp.R')

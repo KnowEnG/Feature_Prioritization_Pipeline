@@ -6,7 +6,7 @@ method:                     bootstrap_correlation
 # --------------------------------------------------------------------
 # - Correlation Method: pearson or t_test or edgeR                   -
 # --------------------------------------------------------------------
-correlation_measure:        t_test
+correlation_measure:        edgeR
 
 # --------------------------------------------------------------------
 # - spreadsheet             dataframe in .tsv format                 -

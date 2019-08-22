@@ -13,7 +13,6 @@ import knpackage.data_cleanup_toolbox as datacln
 
 EPSILON_0 = 1e-7
 
-
 def run_correlation(run_parameters):
     """ perform feature prioritization
 
@@ -231,6 +230,22 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
             correlation_array                  = np.divide(d, denom)
             correlation_array[np.isnan(denom)] = 0
 
+    elif run_parameters['correlation_measure'] == 'edgeR':
+
+        from rpy2.robjects import r, pandas2ri
+        pandas2ri.activate()
+
+        # tell R to load the script
+        r.source(get_edgeR_script_path()))
+
+        # run the method in the script
+        correlations_matrix = r['calculate.correlations'](\
+            spreadsheet_df, phenotype_df)
+
+        # correlations_matrix will already be in the correct order but transposed
+        # format for return
+        correlation_array = pandas2ri.ri2py(correlations_matrix).T
+
     return correlation_array
 
 def sum_array_ranking_to_borda_count(borda_count, corr_array):
@@ -425,3 +440,19 @@ def get_output_file_name(run_parameters, dir_name_key, prefix_string, suffix_str
     output_file_name = kn.create_timestamped_filename(output_file_name) + '_' + suffix_string + '.' + type_suffix
     return output_file_name
 
+def get_edgeR_script_path():
+    """Returns the path to the R script that provides the edgeR implementation.
+
+    Args:
+        None.
+
+    Returns:
+        str: The path to the R script that provides the edgeR implementation.
+
+    """
+    # we expect to find the script in a parallel directory called "r_src"
+    py_script_dir = os.path.dirname(os.path.realpath(__file__))
+    parent_dir = os.path.dirname(py_script_dir)
+    r_script_dir = os.path_join(parent_dir, "r_src")
+
+    return os.path.join(r_script_dir, 'edgeR_fp.R')

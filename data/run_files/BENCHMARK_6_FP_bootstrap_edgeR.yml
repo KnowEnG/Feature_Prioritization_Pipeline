@@ -1,19 +1,19 @@
 # --------------------------------------------------------------------
 # - Analysis Method: correlation or  bootstrap_correlation           -
 # --------------------------------------------------------------------
-method:                     bootstrap_correlation
+method:                      bootstrap_correlation
 
 # --------------------------------------------------------------------
 # - Correlation Method: pearson or t_test or edgeR                   -
 # --------------------------------------------------------------------
-correlation_measure:        t_test
+correlation_measure:         edgeR
 
 # --------------------------------------------------------------------
-# - spreadsheet             dataframe in .tsv format                 -
-# - phenotype               dataframe in .tsv format                 -
+# - spreadsheet          dataframe in .tsv format                    -
+# - phenotype            dataframe in .tsv format                    -
 # --------------------------------------------------------------------
-spreadsheet_name_full_path: ../data/spreadsheets/TEST_1_feature_sample.tsv
-phenotype_name_full_path:   ../data/spreadsheets/TEST_multi_drug_response_t_test.txt
+spreadsheet_name_full_path: ../data/spreadsheets/CCLE_Expression_ensembl.df
+phenotype_name_full_path:   ../data/spreadsheets/CCLE_drug_ec50_cleaned_NAremoved_t_test.txt
 
 # --------------------------------------------------------------------
 # - directory where the result and temporary files will be written   -
@@ -25,12 +25,12 @@ results_directory:          ./run_dir/results
 # - Fraction of rows selected at random                              -
 # - Fraction of columns selected at random                           -
 # --------------------------------------------------------------------
-number_of_bootstraps:       100
-cols_sampling_fraction:     0.8 # 0.8 means 80% of columns
+number_of_bootstraps:       5
+cols_sampling_fraction:     0.9 # 0.9 means 90% of columns
 
 # --------------------------------------------------------------------
 # - Number of features to retain                                     -
 # --------------------------------------------------------------------
 top_gamma_of_sort:          100
-top_beta_of_sort:           2
+top_beta_of_sort:           100
 max_cpu:                    4

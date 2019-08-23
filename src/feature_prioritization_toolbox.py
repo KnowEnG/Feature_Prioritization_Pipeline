@@ -232,8 +232,11 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
 
     elif run_parameters['correlation_measure'] == 'edgeR':
 
-        from rpy2.robjects import r, pandas2ri
-        pandas2ri.activate()
+        # make sure r setup is done only once per child process
+        import sys
+        if 'r' not in sys.modules:
+            from rpy2.robjects import r, pandas2ri
+            pandas2ri.activate()
 
         # tell R to load the script
         r.source(get_edgeR_script_path())
@@ -242,9 +245,8 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
         correlations_matrix = r['calculate.correlations'](\
             spreadsheet_df, phenotype_df)
 
-        # correlations_matrix will already be in the correct order but transposed
-        # format for return
-        correlation_array = pandas2ri.ri2py(correlations_matrix).T
+        # correlations_matrix will already be in the correct order
+        correlation_array = pandas2ri.ri2py(correlations_matrix)[:, 0]
 
     return correlation_array
 

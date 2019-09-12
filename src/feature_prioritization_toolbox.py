@@ -243,12 +243,16 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
         phenotype_df_path = os.path.join(\
             run_parameters["results_tmp_directory"], 'phenotype_df' + filename_suffix)
         output_df_path = os.path.join(\
-            run_parameters["results_tmp_directory"], 'output_df' + filename_suffix))
+            run_parameters["results_tmp_directory"], 'output_df' + filename_suffix)
 
-        spreadsheet_df.to_feather(spreadsheet_df_path)
-        phenotype_df.to_feather(phenotype_df_path)
+        # need to use a range index prior to feather export
+        spreadsheet_df_copy = spreadsheet_df.reset_index()
+        spreadsheet_df_copy.to_feather(spreadsheet_df_path)
+        phenotype_df_copy = phenotype_df.reset_index()
+        phenotype_df_copy.to_feather(phenotype_df_path)
 
-        subprocess.run(["Rscript", "--vanilla", get_edgeR_script_path(), \
+        # subprocess.run not introduced until py 3.5
+        subprocess.call(["Rscript", "--vanilla", get_edgeR_script_path(), \
             spreadsheet_df_path, phenotype_df_path, output_df_path])
 
         correlations_matrix = pd.read_feather(output_df_path)

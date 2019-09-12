@@ -53,7 +53,14 @@ calculate.correlations <- function(geno.df, pheno.df, norm.method="TMM",
 }
 
 args = commandArgs(trailingOnly=TRUE)
+
 geno.df <- feather::read_feather(args[1])
+rownames(geno.df) <- geno.df$index
+geno.df$index <- NULL
+
 pheno.df <- feather::read_feather(args[2])
+rownames(pheno.df) <- pheno.df$index
+pheno.df$index <- NULL
+
 out.df = calculate.correlations(geno.df, pheno.df)
 feather::write_feather(out.df, args[3])

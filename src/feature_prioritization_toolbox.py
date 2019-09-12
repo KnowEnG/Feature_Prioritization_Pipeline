@@ -2,6 +2,8 @@
 @author: The KnowEnG dev team
 """
 import os
+import subprocess
+
 import numpy as np
 import pandas as pd
 
@@ -232,21 +234,27 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
 
     elif run_parameters['correlation_measure'] == 'edgeR':
 
-        # make sure r setup is done only once per child process
-        import sys
-        if 'r' not in sys.modules:
-            from rpy2.robjects import r, pandas2ri
-            pandas2ri.activate()
+        # attempted implementation with rpy2, but it would freeze with multiprocessing
+        # next best thing: dump data to feather files and call Rscript
 
-        # tell R to load the script
-        r.source(get_edgeR_script_path())
+        filename_suffix = '_' + str(os.getpid()) + '.feather'
+        spreadsheet_df_path = os.path.join(\
+            run_parameters["results_tmp_directory"], 'spreadsheet_df' + filename_suffix)
+        phenotype_df_path = os.path.join(\
+            run_parameters["results_tmp_directory"], 'phenotype_df' + filename_suffix)
+        output_df_path = os.path.join(\
+            run_parameters["results_tmp_directory"], 'output_df' + filename_suffix))
 
-        # run the method in the script
-        correlations_matrix = r['calculate.correlations'](\
-            spreadsheet_df, phenotype_df)
+        spreadsheet_df.to_feather(spreadsheet_df_path)
+        phenotype_df.to_feather(phenotype_df_path)
+
+        subprocess.run(["Rscript", "--vanilla", get_edgeR_script_path(), \
+            spreadsheet_df_path, phenotype_df_path, output_df_path])
+
+        correlations_matrix = pd.read_feather(output_df_path)
 
         # correlations_matrix will already be in the correct order
-        correlation_array = pandas2ri.ri2py(correlations_matrix)[:, 0]
+        correlation_array = correlations_matrix[:, 0]
 
     return correlation_array
 

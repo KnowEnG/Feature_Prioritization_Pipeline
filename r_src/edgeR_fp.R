@@ -29,6 +29,7 @@ calculate.correlations <- function(geno.df, pheno.df, norm.method="TMM",
     y <- DGEList(counts = geno.df, group = pheno.group, remove.zeros = F)
 
     y <- calcNormFactors(y, method = norm.method)
+
     design <- model.matrix(~pheno.group)
     y <- estimateDisp(y, design)
 
@@ -50,3 +51,9 @@ calculate.correlations <- function(geno.df, pheno.df, norm.method="TMM",
     correlation_matrix[rownames(DE_results$table), 1] <- correlation_array
     return(correlation_matrix)
 }
+
+args = commandArgs(trailingOnly=TRUE)
+geno.df <- feather::read_feather(args[1])
+pheno.df <- feather::read_feather(args[2])
+out.df = calculate.correlations(geno.df, pheno.df)
+feather::write_feather(out.df, args[3])

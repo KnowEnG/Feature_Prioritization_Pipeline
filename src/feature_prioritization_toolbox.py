@@ -255,10 +255,10 @@ def get_correlation(spreadsheet_df, phenotype_df, run_parameters):
         subprocess.call(["Rscript", "--vanilla", get_edgeR_script_path(), \
             spreadsheet_df_path, phenotype_df_path, output_df_path])
 
-        correlations_matrix = pd.read_feather(output_df_path)
+        correlations_df = pd.read_feather(output_df_path)
 
-        # correlations_matrix will already be in the correct order
-        correlation_array = correlations_matrix[:, 0]
+        # correlations_df will already be in the correct order
+        correlation_array = correlations_df.iloc[:, 0]
 
     return correlation_array
 

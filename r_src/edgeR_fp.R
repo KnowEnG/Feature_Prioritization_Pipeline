@@ -49,18 +49,16 @@ calculate.correlations <- function(geno.df, pheno.df, norm.method="TMM",
                                  dimnames = list(rownames(geno.df),
                                                  "correlation_array"))
     correlation_matrix[rownames(DE_results$table), 1] <- correlation_array
-    return(correlation_matrix)
+    return(as.data.frame(correlation_matrix))
 }
 
 args = commandArgs(trailingOnly=TRUE)
 
-geno.df <- feather::read_feather(args[1])
-rownames(geno.df) <- geno.df$index
-geno.df$index <- NULL
+geno.tibble <- feather::read_feather(args[1])
+geno.df = tibble::column_to_rownames(geno.tibble, var = colnames(geno.tibble)[1])
 
-pheno.df <- feather::read_feather(args[2])
-rownames(pheno.df) <- pheno.df$index
-pheno.df$index <- NULL
+pheno.tibble <- feather::read_feather(args[2])
+pheno.df = tibble::column_to_rownames(pheno.tibble, var = colnames(pheno.tibble)[1])
 
 out.df = calculate.correlations(geno.df, pheno.df)
 feather::write_feather(out.df, args[3])

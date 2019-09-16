@@ -46,7 +46,8 @@ Note: all of the correlation methods mentioned above use the Pearson, t-test, or
     r-base=${R_BASE_VERSION}-* \
     r-base-dev=${R_BASE_VERSION}-* \
     r-recommended=${R_BASE_VERSION}-*
- pip3 install rpy2==2.9.5 tzlocal==2.0.0
+ pip3 install Cython==0.29.13
+ pip3 install feather-format==0.3.1
  Rscript Feature_Prioritization_Pipeline/r_src/installation.R
 ```
 

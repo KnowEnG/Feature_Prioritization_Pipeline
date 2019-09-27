@@ -1,0 +1,28 @@
+# --------------------------------------------------------------------
+# - Analysis Method: correlation or  bootstrap_correlation           -
+# --------------------------------------------------------------------
+method:                     correlation
+
+# --------------------------------------------------------------------
+# - Correlation Method: pearson or t_test or edgeR                   -
+# --------------------------------------------------------------------
+correlation_measure:        edgeR
+
+# --------------------------------------------------------------------
+# - spreadsheet             dataframe in .tsv format                 -
+# - phenotype               dataframe in .tsv format                 -
+# --------------------------------------------------------------------
+spreadsheet_name_full_path: ../data/spreadsheets/TEST_5_feature_sample_counts.tsv
+phenotype_name_full_path:   ../data/spreadsheets/TEST_1_response_t_test.tsv
+
+# --------------------------------------------------------------------
+# - directory where the result and temporary files will be written   -
+# --------------------------------------------------------------------
+results_directory:          ./run_dir/results
+
+# --------------------------------------------------------------------
+# - Number of features to retain                                     -
+# --------------------------------------------------------------------
+top_gamma_of_sort:          100
+top_beta_of_sort:           2
+max_cpu:                    4

@@ -20,6 +20,19 @@ Use verification testing to assure that the runtime environment and the current 
  pip3 install matplotlib==1.4.2
  pip3 install pyyaml
  pip3 install knpackage
+ export R_BASE_VERSION=3.6.1
+ apt-get update && apt-get install -y apt-transport-https
+ echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty-cran35/" > \
+    /etc/apt/sources.list.d/r.list
+ apt-key adv --keyserver keyserver.ubuntu.com \
+    --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+ apt-get update && apt-get install -y \
+    r-base=${R_BASE_VERSION}-* \
+    r-base-dev=${R_BASE_VERSION}-* \
+    r-recommended=${R_BASE_VERSION}-*
+ pip3 install Cython==0.29.13
+ pip3 install feather-format==0.3.1
+ Rscript Feature_Prioritization_Pipeline/r_src/installation.R
 ```
 
 ### 3. Change directory to Feature_Prioritization_Pipeline/test

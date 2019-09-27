@@ -31,11 +31,11 @@ create_run_dir:
 copy_run_files:
 	cp $(RUN_FILES)/*.yml $(RUN_DIR) 
 
-run_all_methods: run_all_small run_all_pearson run_all_t_test
+run_all_methods: run_all_small run_all_pearson run_all_t_test run_all_edgeR
 # ----------------------------------------------------------------
 # Large Benchmarks RUN Section                                   -
 # ----------------------------------------------------------------
-run_all_Benchmarks: run_pearson run_bootstrap_pearson run_t_test run_bootstrap_t_test 
+run_all_Benchmarks: run_pearson run_bootstrap_pearson run_t_test run_bootstrap_t_test run_edgeR run_bootstrap_edgeR
 
 # -------
 # pearson
@@ -57,10 +57,20 @@ run_t_test:
 run_bootstrap_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_4_FP_bootstrap_t_test.yml
 
+# -------
+# edgeR
+# -------
+run_all_edgeR: run_edgeR run_bootstrap_edgeR
+
+run_edgeR:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_5_FP_edgeR.yml
+run_bootstrap_edgeR:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_6_FP_bootstrap_edgeR.yml
+
 # ----------------------------------------------------------------
 # Small Benchmarks RUN Section                                   -
 # ----------------------------------------------------------------
-run_all_small: run_single_drug_pearson run_multidrug_pearson run_single_drug_t_test run_multidrug_t_test
+run_all_small: run_single_drug_pearson run_multidrug_pearson run_single_drug_t_test run_multidrug_t_test run_single_drug_edgeR run_multidrug_edgeR
 
 # -------
 # pearson
@@ -77,6 +87,14 @@ run_single_drug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_3_FP_single_drug_t_test.yml
 run_multidrug_t_test:
 	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
+
+# -------
+# edgeR
+# -------
+run_single_drug_edgeR:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_5_FP_single_drug_edgeR.yml
+run_multidrug_edgeR:
+	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_6_FP_many_drugs_edgeR.yml
 
 # -------
 # - EVALUATION 

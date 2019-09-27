@@ -4,7 +4,7 @@
 method:                     correlation
 
 # --------------------------------------------------------------------
-# - Correlation Method: pearson or t_test                            -
+# - Correlation Method: pearson or t_test or edgeR                   -
 # --------------------------------------------------------------------
 correlation_measure:        pearson
 

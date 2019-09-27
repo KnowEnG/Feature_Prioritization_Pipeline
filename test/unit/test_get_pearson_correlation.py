@@ -1,6 +1,7 @@
 import unittest
 from unittest import TestCase
 import numpy as np
+import pandas as pd
 
 import feature_prioritization_toolbox as gpt
 
@@ -30,7 +31,11 @@ class TestGet_pearson_correlation(TestCase):
         spreadsheet_mat[no_correlation_member] =\
                 spreadsheet_mat[negative_correlation_member,:] + spreadsheet_mat[positive_correlation_member,:]
 
-        corr_arr = gpt.get_correlation(spreadsheet_mat, drug_response, run_parameters)
+        spreadsheet_df = pd.DataFrame(data=spreadsheet_mat, \
+            index=range(n_test_rows), columns=range(n_test_cols))
+        response_df = pd.DataFrame(data=drug_response, \
+            index=range(n_test_cols), columns=['response']).T
+        corr_arr = gpt.get_correlation(spreadsheet_df, response_df, run_parameters)
 
         self.assertAlmostEqual(corr_arr[positive_correlation_member], positive_correlation_value,
                                msg='Pearson correlation error')

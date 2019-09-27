@@ -1,6 +1,7 @@
 import unittest
 from unittest import TestCase
 import numpy as np
+import pandas as pd
 
 import feature_prioritization_toolbox as gpt
 
@@ -37,11 +38,16 @@ class TestGet_t_test_correlation(TestCase):
         spreadsheet_mat[predicted_correlation_member,:] = spreadsheet_array
         spreadsheet_mat[-1,:] = 0
 
-        corr_arr = gpt.get_correlation(spreadsheet_mat, drug_response, run_parameters)
+        spreadsheet_df = pd.DataFrame(data=spreadsheet_mat, \
+            index=range(n_test_rows), columns=range(n_cols))
+        response_df = pd.DataFrame(data=drug_response, \
+            index=range(n_cols), columns=['response']).T
+        corr_arr = gpt.get_correlation(spreadsheet_df, response_df, run_parameters)
 
         self.assertAlmostEqual(corr_arr[predicted_correlation_member], predicted_t_value, msg='t_test correlation error')
-        for k in range(0, n_test_rows):
+        for k in range(0, n_test_rows-2):
             self.assertTrue(np.isfinite(corr_arr[k]), msg='t_test Correlation Array is Not Finite')
+        self.assertTrue(np.isnan(corr_arr[n_test_rows-1]))
 
 if __name__ == '__main__':
     unittest.main()

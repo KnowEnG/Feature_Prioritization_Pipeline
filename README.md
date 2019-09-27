@@ -3,7 +3,7 @@ This is the Knowledge Engine for Genomics (KnowEnG), an NIH, BD2K Center of Exce
 
 This pipeline **ranks** the rows of a given spreadsheet, where spreadsheet's rows correspond to feature-labels and columns correspond to sample-labels. The ranking is based on correlating feature expression data against response data.
 
-There are two prioritization methods, using either pearson or t-test as the measure of correlation:
+There are two prioritization methods:
 
 
 | **Options**                                        | **Method**                           | **Parameters**            |
@@ -12,7 +12,7 @@ There are two prioritization methods, using either pearson or t-test as the meas
 | Bootstrap Correlation                              | bootstrap sampling correlation       | bootstrap_correlation     |
 
 
-Note: all of the correlation methods mentioned above use the Pearson or t-test correlation measure method.
+Note: all of the correlation methods mentioned above use the Pearson, t-test, or edgeR correlation measure method.
 
 * * * 
 ## How to run this pipeline with Our data
@@ -35,6 +35,20 @@ Note: all of the correlation methods mentioned above use the Pearson or t-test c
  pip3 install matplotlib==1.4.2
  pip3 install pyyaml
  pip3 install knpackage
+ # the following lines are required only for edgeR
+ export R_BASE_VERSION=3.6.1
+ apt-get update && apt-get install -y apt-transport-https
+ echo "deb https://cloud.r-project.org/bin/linux/ubuntu trusty-cran35/" > \
+    /etc/apt/sources.list.d/r.list
+ apt-key adv --keyserver keyserver.ubuntu.com \
+    --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+ apt-get update && apt-get install -y \
+    r-base=${R_BASE_VERSION}-* \
+    r-base-dev=${R_BASE_VERSION}-* \
+    r-recommended=${R_BASE_VERSION}-*
+ pip3 install Cython==0.29.13
+ pip3 install feather-format==0.3.1
+ Rscript Feature_Prioritization_Pipeline/r_src/installation.R
 ```
 
 ### 3. Change directory to Feature_Prioritization_Pipeline
@@ -54,7 +68,7 @@ cd test
 make env_setup
 ```
 
-### 6. Use one of the following "make" commands to select and run a clustering option:
+### 6. Use one of the following "make" commands to select and run a prioritization option:
 
 
 | **Command**                        | **Option**                                        | 
@@ -63,6 +77,8 @@ make env_setup
 | make run_bootstrap_pearson | bootstrap sampling with pearson correlation                    |
 | make run_t_test          | t-test correlation                                       |
 | make run_bootstrap_t_test | bootstrap sampling with t-test correlation                    |
+| make run_edgeR          | edgeR correlation                                       |
+| make run_bootstrap_edgeR | bootstrap sampling with edgeR correlation                    |
 
  
 * * * 
@@ -117,7 +133,7 @@ set the spreadsheet and response data file names to point to your data
 | **Key**                    | **Value**                             | **Comments**                                                            |
 | -------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
 | method                     | correlation or  bootstrap_correlation | Choose feature prioritization method                                    |
-| correlation_measure        | pearson or t_test                     | Choose correlation measure method                                       |
+| correlation_measure        | pearson or t_test or edgeR            | Choose correlation measure method                                       |
 | spreadsheet_name_full_path | directory+spreadsheet_name            | Path and file name of user supplied feature sets                        |
 | phenotype_name_full_path   | directory+response                    | Path and file name of user supplied response file                       |
 | results_directory          | directory                             | Directory to save the output files                                      |

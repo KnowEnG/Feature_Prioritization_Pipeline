@@ -45,7 +45,7 @@ class TestGet_t_test_correlation(TestCase):
         corr_arr = gpt.get_correlation(spreadsheet_df, response_df, run_parameters)
 
         self.assertAlmostEqual(corr_arr[predicted_correlation_member], predicted_t_value, msg='t_test correlation error')
-        for k in range(0, n_test_rows-2):
+        for k in range(0, n_test_rows-1):
             self.assertTrue(np.isfinite(corr_arr[k]), msg='t_test Correlation Array is Not Finite')
         self.assertTrue(np.isnan(corr_arr[n_test_rows-1]))
 

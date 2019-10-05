@@ -1,7 +1,7 @@
 # ----------------------------------------------------------------
 # Variables setup Section                                        -
 # ----------------------------------------------------------------
-SCRIPT =             ../src/feature_prioritization.py
+SCRIPT =             -m knfeatureprioritization.feature_prioritization
 RUN_DIR =            ./run_dir
 RUN_FILES =          ../data/run_files
 RESULTS_DIR =        $(RUN_DIR)/results
@@ -10,6 +10,7 @@ UNIT_TEST_TEMP_DIR = ./unit/tmp
 DATA_DIR =           ../data/spreadsheets
 INPUT_DATA =         $(foreach dir,$(DATA_DIR),$(wildcard $(dir)/*.gz))
 INPUT_DATA_SUFFIX =  $(suffix $(INPUT_DATA))
+PYTHONPATH =         ../
 
 RMR =                rm -rf
 GZIP =               gzip
@@ -43,9 +44,9 @@ run_all_Benchmarks: run_pearson run_bootstrap_pearson run_t_test run_bootstrap_t
 run_all_pearson: run_pearson run_bootstrap_pearson  
 
 run_pearson:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_1_FP_pearson.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_1_FP_pearson.yml
 run_bootstrap_pearson:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_2_FP_bootstrap_pearson.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_2_FP_bootstrap_pearson.yml
 
 # -------
 # t_test
@@ -53,9 +54,9 @@ run_bootstrap_pearson:
 run_all_t_test: run_t_test run_bootstrap_t_test 
 	
 run_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_3_FP_t_test.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_3_FP_t_test.yml
 run_bootstrap_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_4_FP_bootstrap_t_test.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_4_FP_bootstrap_t_test.yml
 
 # -------
 # edgeR
@@ -63,9 +64,9 @@ run_bootstrap_t_test:
 run_all_edgeR: run_edgeR run_bootstrap_edgeR
 
 run_edgeR:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_5_FP_edgeR.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_5_FP_edgeR.yml
 run_bootstrap_edgeR:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_6_FP_bootstrap_edgeR.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file BENCHMARK_6_FP_bootstrap_edgeR.yml
 
 # ----------------------------------------------------------------
 # Small Benchmarks RUN Section                                   -
@@ -76,31 +77,31 @@ run_all_small: run_single_drug_pearson run_multidrug_pearson run_single_drug_t_t
 # pearson
 # -------
 run_single_drug_pearson:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_1_FP_single_drug_pearson.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_1_FP_single_drug_pearson.yml
 run_multidrug_pearson:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_2_FP_many_drugs_pearson.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_2_FP_many_drugs_pearson.yml
 
 # -------
 # t_test
 # -------
 run_single_drug_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_3_FP_single_drug_t_test.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_3_FP_single_drug_t_test.yml
 run_multidrug_t_test:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_4_FP_many_drugs_t_test.yml
 
 # -------
 # edgeR
 # -------
 run_single_drug_edgeR:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_5_FP_single_drug_edgeR.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_5_FP_single_drug_edgeR.yml
 run_multidrug_edgeR:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_6_FP_many_drugs_edgeR.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file TEST_6_FP_many_drugs_edgeR.yml
 
 # -------
 # - EVALUATION 
 # -------
 run_pheno_expander:
-	python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file zPhenotype_Expander.yml
+	PYTHONPATH=${PYTHONPATH} python3 $(SCRIPT) -run_directory $(RUN_DIR) -run_file zPhenotype_Expander.yml
 
 # ----------------------------------------------------------------
 # - VERIFICATION TESTS RUN SECTION                               -

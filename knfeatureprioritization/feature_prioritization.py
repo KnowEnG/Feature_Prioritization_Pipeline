@@ -4,17 +4,17 @@
 
 def correlation(run_parameters):
     """ feature prioritization """
-    from feature_prioritization_toolbox import run_correlation
+    from .feature_prioritization_toolbox import run_correlation
     run_correlation(run_parameters)
 
 def bootstrap_correlation(run_parameters):
     """ feature prioritization with bootstrap"""
-    from feature_prioritization_toolbox import run_bootstrap_correlation
+    from .feature_prioritization_toolbox import run_bootstrap_correlation
     run_bootstrap_correlation(run_parameters)
 
 def phenotype_expander(run_parameters):
     """ phenotype expander"""
-    from phenotype_expander_toolbox import phenotype_expander
+    from .phenotype_expander_toolbox import phenotype_expander
     phenotype_expander(run_parameters)
 
 SELECT = {

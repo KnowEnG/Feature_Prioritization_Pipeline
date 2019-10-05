@@ -1,0 +1,374 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>knfeatureprioritization package &#8212; feature_prioritization_pipeline 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="knfeatureprioritization-package">
+<h1>knfeatureprioritization package<a class="headerlink" href="#knfeatureprioritization-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-knfeatureprioritization.feature_prioritization">
+<span id="knfeatureprioritization-feature-prioritization-module"></span><h2>knfeatureprioritization.feature_prioritization module<a class="headerlink" href="#module-knfeatureprioritization.feature_prioritization" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: The KnowEnG dev team</p>
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization.bootstrap_correlation">
+<code class="descclassname">knfeatureprioritization.feature_prioritization.</code><code class="descname">bootstrap_correlation</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization.bootstrap_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>feature prioritization with bootstrap</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization.correlation">
+<code class="descclassname">knfeatureprioritization.feature_prioritization.</code><code class="descname">correlation</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization.correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>feature prioritization</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization.main">
+<code class="descclassname">knfeatureprioritization.feature_prioritization.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main function to perform feature prioritization.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization.phenotype_expander">
+<code class="descclassname">knfeatureprioritization.feature_prioritization.</code><code class="descname">phenotype_expander</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization.phenotype_expander" title="Permalink to this definition">¶</a></dt>
+<dd><p>phenotype expander</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-knfeatureprioritization.feature_prioritization_toolbox">
+<span id="knfeatureprioritization-feature-prioritization-toolbox-module"></span><h2>knfeatureprioritization.feature_prioritization_toolbox module<a class="headerlink" href="#module-knfeatureprioritization.feature_prioritization_toolbox" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: The KnowEnG dev team</p>
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.generate_bootstrap_correlation_output">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">generate_bootstrap_correlation_output</code><span class="sig-paren">(</span><em>borda_count</em>, <em>viz_score</em>, <em>pearson_array</em>, <em>phenotype_name</em>, <em>feature_name_list</em>, <em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.generate_bootstrap_correlation_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save final output of correlation</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>pearson_array: pearson correlation coefficient array
+phenotype_name: name of the phenotype
+feature_name_list: list of the features correlated (size of pearson_array
+run_parameters: dictionary of run parameters with key ‘results_directory’</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.generate_correlation_output">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">generate_correlation_output</code><span class="sig-paren">(</span><em>pc_array</em>, <em>phenotype_name</em>, <em>feature_name_list</em>, <em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.generate_correlation_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save final output of correlation</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>pc_array: pearson correlation coefficient array
+phenotype_name: name of the phenotype
+feature_name_list: list of the features correlated (size of pc_array
+run_parameters: dictionary of run parameters with key ‘results_directory’</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.get_correlation">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">get_correlation</code><span class="sig-paren">(</span><em>spreadsheet_df</em>, <em>phenotype_df</em>, <em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.get_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>correlation function definition for all run methods</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>spreadsheet_df: features x samples
+phenotype_df: one x samples
+run_parameters: with key ‘correlation_measure’</dd>
+<dt>Returns:</dt>
+<dd>correlation_array: features x one</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.get_edgeR_script_path">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">get_edgeR_script_path</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.get_edgeR_script_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the path to the R script that provides the edgeR implementation.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>None.</dd>
+<dt>Returns:</dt>
+<dd>str: The path to the R script that provides the edgeR implementation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.get_output_file_name">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">get_output_file_name</code><span class="sig-paren">(</span><em>run_parameters</em>, <em>dir_name_key</em>, <em>prefix_string</em>, <em>suffix_string=''</em>, <em>type_suffix='tsv'</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.get_output_file_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>get the full directory / filename for writing
+Args:</p>
+<blockquote>
+<div>run_parameters: dictionary with keys: dir_name_key, “method” and “correlation_measure”
+dir_name_key:   run_parameters dictionary key for the output directory
+prefix_string:  the first letters of the ouput file name
+suffix_string:  the last letters of the output file name before type_suffix
+type_suffix:    the file type extenstion (default ‘tsv’) without period character</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>output_file_name:   full file and directory name suitable for file writing</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.run_bootstrap_correlation">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">run_bootstrap_correlation</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.run_bootstrap_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform feature prioritization using bootstrap sampling</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>run_parameters: parameter set dictionary.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.run_bootstrap_correlation_worker">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">run_bootstrap_correlation_worker</code><span class="sig-paren">(</span><em>run_parameters</em>, <em>spreadsheet_df</em>, <em>phenotype_df</em>, <em>n_bootstraps</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.run_bootstrap_correlation_worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>core function for parallel run_bootstrap_correlation</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>run_parameters:  dict of parameters
+spreadsheet_df:  spreadsheet data frame
+phenotype_df:    phenotype data frame
+n_bootstraps:    number of bootstrap samples to use
+job_id:          parallel iteration number</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.run_correlation">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">run_correlation</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.run_correlation" title="Permalink to this definition">¶</a></dt>
+<dd><p>perform feature prioritization</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>run_parameters: parameter set dictionary.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.run_correlation_worker">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">run_correlation_worker</code><span class="sig-paren">(</span><em>run_parameters</em>, <em>spreadsheet_df</em>, <em>phenotype_df</em>, <em>job_id</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.run_correlation_worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>core function for parallel run_correlation
+Args:</p>
+<blockquote>
+<div>run_parameters:  dict of parameters
+spreadsheet_df:  spreadsheet data frame
+phenotype_df:    phenotype data frame
+job_id:          parallel iteration number</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.sample_dfs">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">sample_dfs</code><span class="sig-paren">(</span><em>spreadsheet_df</em>, <em>phenotype_df</em>, <em>rows_fraction</em>, <em>cols_fraction</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.sample_dfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Selects a random subset of the samples according to <cite>cols_fraction</cite> and a
+random subset of the features according to <cite>rows_fraction</cite>. Returns the
+portion of <cite>spreadsheet_df</cite> containing the selected samples and having all
+zeros for the unselected features. Returns the portion of <cite>phenotype_df</cite>
+containing the selected samples.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>spreadsheet_df: feature x sample spreadsheet as a df.
+phenotype_df: one x sample phenotype data as a df.
+rows_fraction: the fraction of rows to keep in the returned sample - [0 : 1].
+cols_fraction: the fraction of cols to keep in the returned sample - [0 : 1].</dd>
+<dt>Returns:</dt>
+<dd>spreadsheet_sample_df: a df containing samples from <cite>spreadsheet_df</cite>.
+phenotype_sample_df: a df containing samples from <cite>phenotype_df</cite>.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.sum_array_ranking_to_borda_count">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">sum_array_ranking_to_borda_count</code><span class="sig-paren">(</span><em>borda_count</em>, <em>corr_array</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.sum_array_ranking_to_borda_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>sum to borda count with a contigous array added to borda count
+Args:</p>
+<blockquote>
+<div>borda_count: the current borda count - same size as correlation array
+corr_array:  the correlation array to rank and add to the count</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>borda_count: the ranking of the correlation array added to the input borda count</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.write_one_phenotype">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">write_one_phenotype</code><span class="sig-paren">(</span><em>result_df</em>, <em>phenotype_name</em>, <em>feature_name_list</em>, <em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.write_one_phenotype" title="Permalink to this definition">¶</a></dt>
+<dd><p>write the phenotype output file to the results directory and the temporary directory files</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>result_df:
+phenotype_name:
+feature_name_list:
+run_parameters:</dd>
+<dt>Output:</dt>
+<dd>{phenotype}_{method}_{correlation_measure}_{timestamp}_viz.tsv</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.write_phenotype_data_all">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">write_phenotype_data_all</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.write_phenotype_data_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post Processing: writes rows as features, cols as phenotypes, data is feature in top n for the phenotype T or F.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>run_parameters: with field: ‘results_directory’</dd>
+<dt>Output:</dt>
+<dd>ranked_features_per_phenotype_{method}_{correlation_measure}_{timestamp}_download.tsv
+top_features_per_phenotype_{method}_{correlation_measure}_{timestamp}_download.tsv</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.feature_prioritization_toolbox.zscore_dataframe">
+<code class="descclassname">knfeatureprioritization.feature_prioritization_toolbox.</code><code class="descname">zscore_dataframe</code><span class="sig-paren">(</span><em>features_by_sample_df</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.feature_prioritization_toolbox.zscore_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>zscore by rows for features x samples dataframe</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>features_by_sample_df: zscore along rows for features x phenotypes dataframe</dd>
+<dt>Returns:</dt>
+<dd>spreadsheet_df: rows add up to zero, normalized to the mean and std deveiation</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-knfeatureprioritization.phenotype_expander_toolbox">
+<span id="knfeatureprioritization-phenotype-expander-toolbox-module"></span><h2>knfeatureprioritization.phenotype_expander_toolbox module<a class="headerlink" href="#module-knfeatureprioritization.phenotype_expander_toolbox" title="Permalink to this headline">¶</a></h2>
+<p>&#64;author: The KnowEnG dev team</p>
+<dl class="class">
+<dt id="knfeatureprioritization.phenotype_expander_toolbox.ColumnType">
+<em class="property">class </em><code class="descclassname">knfeatureprioritization.phenotype_expander_toolbox.</code><code class="descname">ColumnType</code><a class="headerlink" href="#knfeatureprioritization.phenotype_expander_toolbox.ColumnType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Two categories of phenotype traits.</p>
+<dl class="attribute">
+<dt id="knfeatureprioritization.phenotype_expander_toolbox.ColumnType.CATEGORICAL">
+<code class="descname">CATEGORICAL</code><em class="property"> = 'categorical'</em><a class="headerlink" href="#knfeatureprioritization.phenotype_expander_toolbox.ColumnType.CATEGORICAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="knfeatureprioritization.phenotype_expander_toolbox.ColumnType.CONTINUOUS">
+<code class="descname">CONTINUOUS</code><em class="property"> = 'continuous'</em><a class="headerlink" href="#knfeatureprioritization.phenotype_expander_toolbox.ColumnType.CONTINUOUS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.phenotype_expander_toolbox.phenotype_expander">
+<code class="descclassname">knfeatureprioritization.phenotype_expander_toolbox.</code><code class="descname">phenotype_expander</code><span class="sig-paren">(</span><em>run_parameters</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.phenotype_expander_toolbox.phenotype_expander" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run phenotype expander on the whole dataframe of phenotype data.
+Save the results to tsv file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="knfeatureprioritization.phenotype_expander_toolbox.run_pre_processing_phenotype_expander">
+<code class="descclassname">knfeatureprioritization.phenotype_expander_toolbox.</code><code class="descname">run_pre_processing_phenotype_expander</code><span class="sig-paren">(</span><em>phenotype_df</em>, <em>threshold</em><span class="sig-paren">)</span><a class="headerlink" href="#knfeatureprioritization.phenotype_expander_toolbox.run_pre_processing_phenotype_expander" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the preprocessing step to expand phenotype 
+Parameters:</p>
+<blockquote>
+<div>phenotype_df: phenotype dataframe.
+threshold: threshold to determine which phenotype to remove.</div></blockquote>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>output_dict: dictionary with keys to be categories of phenotype data and values
+to be a list of related dataframes.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-knfeatureprioritization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-knfeatureprioritization" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">feature_prioritization_pipeline</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, knoweng_team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/knfeatureprioritization.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

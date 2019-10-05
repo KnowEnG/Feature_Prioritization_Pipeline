@@ -118,12 +118,12 @@ set the spreadsheet and response data file names to point to your data
 
   * Update PYTHONPATH enviroment variable
    ``` 
-   export PYTHONPATH='../src':$PYTHONPATH    
+   export PYTHONPATH='../':$PYTHONPATH    
    ```
    
   * Run
    ```
-  python3 ../src/feature_prioritization.py -run_directory ./ -run_file zTEMPLATE_FP_BENCHMARKS.yml
+  python3 -m knfeatureprioritization.feature_prioritization -run_directory ./ -run_file zTEMPLATE_FP_BENCHMARKS.yml
    ```
 
 * * * 

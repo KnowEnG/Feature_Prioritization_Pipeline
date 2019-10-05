@@ -3,7 +3,7 @@ from unittest import TestCase
 import numpy as np
 import pandas as pd
 
-import feature_prioritization_toolbox as gpt
+import knfeatureprioritization.feature_prioritization_toolbox as gpt
 
 class TestGet_t_test_correlation(TestCase):
     """  predicted correlation vs feature_prioritization_toolbox.get_correlation for 'correlation_measure' = 't_test'  """

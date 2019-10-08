@@ -5,7 +5,6 @@ import os
 from enum import Enum
 import pandas as pd
 import numpy as np
-from scipy import stats
 import knpackage.toolbox as kn
 
 
